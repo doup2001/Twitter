@@ -1,0 +1,32 @@
+create database twit;
+use twit;
+
+CREATE TABLE account (
+    firstname VARCHAR(255),
+    lastname VARCHAR(255),
+    id VARCHAR(20) PRIMARY KEY,
+    password VARCHAR(255)
+    birthdate DATE,
+    email VARCHAR(255),
+    gender VARCHAR(10);
+);
+
+CREATE TABLE follow (
+    ID VARCHAR(20),
+    fromUser VARCHAR(20),
+    toUser VARCHAR(20),
+    PRIMARY KEY(fromUser, toUser),
+    FOREIGN KEY(ID) REFERENCES account(id)
+);
+
+CREATE TABLE article (
+    num INT,
+    ID VARCHAR(20),
+    content TEXT,
+    PRIMARY KEY(num),
+    FOREIGN KEY(ID) REFERENCES account(id)
+);
+
+select * from article;
+select * from follow;
+select * from account;
