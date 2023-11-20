@@ -26,8 +26,9 @@ public class MainBoardUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
+
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(0, 0, 0));
+        contentPane.setBackground(new Color(0, 0, 0)); // 하늘색 배경
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -38,10 +39,8 @@ public class MainBoardUI extends JFrame {
         list.setForeground(new Color(254, 255, 255));
         contentPane.add(list);
 
-        articleReadButton = new JButton(new ImageIcon("/img/refreshPage.png"));
-        articleReadButton.setBorderPainted(false);
-        articleReadButton.setOpaque(false);
-        articleReadButton.setBounds(310, 120, 50, 50);
+        articleReadButton = new JButton("Refresh");
+        articleReadButton.setBounds(310, 120, 80, 30);
         contentPane.add(articleReadButton);
 
         ArrayList<Post> arr = controller.readPost(ID);
@@ -60,7 +59,6 @@ public class MainBoardUI extends JFrame {
             listModel = new DefaultListModel();
             for (Post res : arr) {
                 String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
                 listModel.addElement(post);
             }
         }
@@ -85,7 +83,6 @@ public class MainBoardUI extends JFrame {
                     listModel = new DefaultListModel();
                     for (Post res : arr) {
                         String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
                         listModel.addElement(post);
                     }
                 }
@@ -93,11 +90,8 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-
-        lowBarFollowingBoardButton = new JButton(new ImageIcon("/img/home.png"));
-        lowBarFollowingBoardButton.setBounds(40, 620, 30, 30);
-        lowBarFollowingBoardButton.setBorderPainted(false);
-        lowBarFollowingBoardButton.setOpaque(false);
+        lowBarFollowingBoardButton = new JButton("MainBoard");
+        lowBarFollowingBoardButton.setBounds(40, 620, 80, 30);
         lowBarFollowingBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,28 +99,22 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        lowBarFollowButton = new JButton(new ImageIcon("/img/followers.png"));
-        lowBarFollowButton.setBounds(184,620, 30, 30);
-        lowBarFollowButton.setBorderPainted(false);
-        lowBarFollowButton.setOpaque(false);
+        lowBarFollowButton = new JButton("Follow");
+        lowBarFollowButton.setBounds(184, 620, 80, 30);
         lowBarFollowButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 팔로잉 보드로 넘어가기
                 System.out.println("Follow!");
                 FollowUI followUI = new FollowUI(ID);
                 followUI.setVisible(true);
             }
         });
 
-        lowBarHisBoard = new JButton(new ImageIcon("/img/myhome.png"));
-        lowBarHisBoard.setBounds(330,620, 30, 30);
-        lowBarHisBoard.setBorderPainted(false);
-        lowBarHisBoard.setOpaque(false);
+        lowBarHisBoard = new JButton("MY Home");
+        lowBarHisBoard.setBounds(310, 620, 80, 30); // 우측 아래로 이동
         lowBarHisBoard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // myboard로 이동
                 dispose();
                 System.out.println("Your Board!");
                 MyBoardUI myBoardUI = new MyBoardUI(ID);
@@ -138,10 +126,19 @@ public class MainBoardUI extends JFrame {
         contentPane.add(lowBarFollowButton);
         contentPane.add(lowBarHisBoard);
 
-        JLabel MainLogo = new JLabel("");
-        Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
-        MainLogo.setIcon(new ImageIcon(img));
-        MainLogo.setBounds(184, 25, 30, 30);
-        contentPane.add(MainLogo);
+        ImageIcon mainLogoIcon = new ImageIcon(getClass().getResource("/img/mainLogo.png"));
+        JLabel mainLogo = new JLabel(mainLogoIcon);
+        mainLogo.setBounds(184, 25, mainLogoIcon.getIconWidth(), mainLogoIcon.getIconHeight());
+        contentPane.add(mainLogo);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MainBoardUI mainBoardUI = new MainBoardUI("testUser");
+                mainBoardUI.setVisible(true);
+            }
+        });
     }
 }

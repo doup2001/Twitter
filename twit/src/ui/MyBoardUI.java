@@ -86,13 +86,16 @@ public class MyBoardUI extends JFrame {
         list.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
-                if(!event.getValueIsAdjusting()) {
+                if (!event.getValueIsAdjusting()) {
                     String postText = (String) list.getSelectedValue();
-                    String[] strArr = postText.split(" ");
-                    articleNum = Integer.parseInt(String.valueOf(strArr[0]));
+                    if (postText != null) {
+                        String[] strArr = postText.split(" ");
+                        articleNum = Integer.parseInt(String.valueOf(strArr[0]));
+                    }
                 }
             }
         });
+
 
         ArrayList<Post> arr;
         arr = controller.readPost(ID);
@@ -125,20 +128,20 @@ public class MyBoardUI extends JFrame {
                 int num = controller.getArticleNextNum();
                 controller.insertPost(new Post(num, ID, article));
                 readArea.setText("");
+                list.clearSelection(); // clearSelection() 호출 위치 변경
+
                 ArrayList<Post> arr;
                 arr = controller.readPost(ID);
                 arr = controller.listSort(arr);
 
-                if (arr.size() == 0 ) {
+                if (arr.size() == 0) {
                     listModel = new DefaultListModel();
                     String info = ID + "님은 아직 트윗하지 않았습니다";
                     listModel.addElement(info);
-                }
-                else {
+                } else {
                     listModel = new DefaultListModel();
                     for (Post res : arr) {
                         String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
                         listModel.addElement(post);
                     }
                 }

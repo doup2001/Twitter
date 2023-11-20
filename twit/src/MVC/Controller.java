@@ -201,9 +201,10 @@ public class Controller {
     public void addFollow(String Myid, String userId) {
         try {
             st = connect.createStatement();
-            st.executeUpdate("insert into follow values ('"+ Myid +"', '"+ userId +"');");
+            st.executeUpdate("insert into follow (fromUser, toUser) values ('" + Myid + "', '" + userId + "');");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
         } finally {
             try {
                 st.close();
@@ -216,10 +217,10 @@ public class Controller {
     public void deleteFollow(String Myid, String userId) {
         try {
             st = connect.createStatement();
-            st.executeUpdate("delete from follow where fromUser = '"+ Myid +"'" +
-                    " and toUser = '"+ userId +"';");
+            st.executeUpdate("delete from follow where fromUser = '" + Myid + "'" + " and toUser = '" + userId + "';");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
         } finally {
             try {
                 st.close();
@@ -230,13 +231,11 @@ public class Controller {
     }
 
     public void updateFollow(String Myid, String userId) {
-        // 팔로우 되어있을 때 언팔로우 버튼 누르는 경우
         if (checkFollow(Myid, userId)) {
             deleteFollow(Myid, userId);
-            return;
+        } else {
+            addFollow(Myid, userId);
         }
-
-        addFollow(Myid, userId);
     }
 
     class PostNumComparator implements Comparator<Post> {
