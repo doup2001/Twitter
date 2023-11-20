@@ -32,7 +32,7 @@ public class ChangeInfoUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        lblEnterNewPassword = new JLabel("새 비밀번호:");
+        lblEnterNewPassword = new JLabel("비밀번호 수정:");
         lblEnterNewPassword.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewPassword.setForeground(new Color(254, 255, 255));
         lblEnterNewPassword.setBounds(34, 32, 72, 27);
@@ -44,7 +44,7 @@ public class ChangeInfoUI extends JFrame {
         contentPane.add(passwordTextField);
         passwordTextField.setColumns(10);
 
-        lblEnterNewEmail = new JLabel("새 이메일:");  // 추가된 부분
+        lblEnterNewEmail = new JLabel("이메일 수정:");  // 추가된 부분
         lblEnterNewEmail.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewEmail.setForeground(new Color(254, 255, 255));
         lblEnterNewEmail.setBounds(34, 82, 72, 27);
@@ -56,7 +56,7 @@ public class ChangeInfoUI extends JFrame {
         contentPane.add(emailTextField);  // 추가된 부분
         emailTextField.setColumns(10);  // 추가된 부분
 
-        lblEnterNewDOB = new JLabel("새 생년월일:");
+        lblEnterNewDOB = new JLabel("생년월일 수정:");
         lblEnterNewDOB.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewDOB.setForeground(new Color(254, 255, 255));
         lblEnterNewDOB.setBounds(34, 132, 72, 27);
