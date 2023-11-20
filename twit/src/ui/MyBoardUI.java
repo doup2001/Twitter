@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MyBoardUI extends JFrame {
@@ -49,15 +50,27 @@ public class MyBoardUI extends JFrame {
         btnNewButton.setBounds(285, 20, 100, 30);
         contentPane.add(btnNewButton);
 
-        JButton button = new JButton("비밀번호 변경");
+        JButton button = new JButton("개인정보 변경");
         button.setBackground(UIManager.getColor("Button.disabledForeground"));
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ChangePasswordUI bo = new ChangePasswordUI(ID);
-                bo.setTitle("Change Password");
-                bo.setVisible(true);
+                // 기존 비밀번호 확인
+                String oldPassword = JOptionPane.showInputDialog("기존 비밀번호를 입력하세요:");
+
+                if (isOldPasswordCorrect(oldPassword)) {
+                    // 비밀번호가 일치하는 경우
+                    ChangeInfoUI infoUI = new ChangeInfoUI(ID);
+                    infoUI.setTitle("Change Password");
+                    infoUI.setVisible(true);
+                } else {
+                    // 비밀번호가 일치하지 않는 경우
+                    JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
+
+
         button.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         button.setBounds(285, 47, 100, 30);
         contentPane.add(button);
@@ -222,4 +235,27 @@ public class MyBoardUI extends JFrame {
             }
         });
     }
+
+    private boolean isOldPasswordCorrect(String inputPassword) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+            PreparedStatement st = con.prepareStatement("SELECT password FROM account WHERE ID=?");
+            st.setString(1, ID);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+                return storedPassword.equals(inputPassword);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+
 }
+
+
