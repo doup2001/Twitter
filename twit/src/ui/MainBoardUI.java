@@ -91,7 +91,7 @@ public class MainBoardUI extends JFrame {
         });
 
         lowBarFollowingBoardButton = new JButton("MainBoard");
-        lowBarFollowingBoardButton.setBounds(40, 620, 80, 30);
+        lowBarFollowingBoardButton.setBounds(30, 620, 80, 40);
         lowBarFollowingBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +100,7 @@ public class MainBoardUI extends JFrame {
         });
 
         lowBarFollowButton = new JButton("Follow");
-        lowBarFollowButton.setBounds(184, 620, 80, 30);
+        lowBarFollowButton.setBounds(160, 620, 80, 40);
         lowBarFollowButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +111,7 @@ public class MainBoardUI extends JFrame {
         });
 
         lowBarHisBoard = new JButton("MY Home");
-        lowBarHisBoard.setBounds(310, 620, 80, 30); // 우측 아래로 이동
+        lowBarHisBoard.setBounds(290, 620, 80, 40); // 우측 아래로 이동
         lowBarHisBoard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
