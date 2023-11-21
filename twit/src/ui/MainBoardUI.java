@@ -111,13 +111,13 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        lowBarFollowButton = new JButton("Follow");
+        lowBarFollowButton = new JButton("All User");
         lowBarFollowButton.setBounds(115, 620, 80, 40);
         lowBarFollowButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Follow!");
-                FollowUI followUI = new FollowUI(ID);
+                System.out.println("AllUser!");
+                AllUserUI followUI = new AllUserUI(ID);
                 followUI.setVisible(true);
             }
         });
