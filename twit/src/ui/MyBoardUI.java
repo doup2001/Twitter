@@ -29,6 +29,13 @@ public class MyBoardUI extends JFrame {
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
 
+        JLabel userIdLabel = new JLabel(ID + "의 피드");
+        userIdLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 16));
+        userIdLabel.setForeground(new Color(254, 255, 255));
+        userIdLabel.setBounds(40, 130, 200, 30);
+        contentPane.add(userIdLabel);
+
+
         JButton btnNewButton = new JButton("로그아웃");
         btnNewButton.setForeground(new Color(220, 45, 59));
         btnNewButton.setBackground(UIManager.getColor("Button.disabledForeground"));
@@ -180,7 +187,7 @@ public class MyBoardUI extends JFrame {
                 } else {
                     listModel = new DefaultListModel();
                     for (Post res : arr) {
-                        String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
+                        String post =  "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
 
                         listModel.addElement(post);
                     }

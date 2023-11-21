@@ -24,7 +24,7 @@ public class OtherBoardUI extends JFrame {
         this.otherUserID = otherUserID;
         this.userID = userID;
 
-        setSize(500,800);
+        setSize(500, 800);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
@@ -37,25 +37,34 @@ public class OtherBoardUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        JLabel userIdLabel = new JLabel(otherUserID + "님의 피드");
+        userIdLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 16));
+        userIdLabel.setForeground(new Color(254, 255, 255));
+        userIdLabel.setBounds(40, 130, 200, 30);
+        contentPane.add(userIdLabel);
+
+        // 글 작성
         writeArea = new JTextArea("");
-        writeArea.setBounds(40, 95, 320, 73);
+        writeArea.setBounds(40, 170, 320, 73);
         writeArea.setBorder(BorderFactory.createCompoundBorder(
                 writeArea.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         contentPane.add(writeArea);
 
+
+        // 글 불러오기
         readArea = new JTextArea("read");
         readArea.setBounds(0, 400, 350, 400);
 
         list = new JList();
-        list.setBounds(40, 240, 320, 350);
+        list.setBounds(40, 300, 320, 300);
         list.setForeground(new Color(254, 255, 255));
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
 
         JButton articleWriteButton = new JButton("글 작성하기");
         articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleWriteButton.setBounds(210, 180, 100, 30);
+        articleWriteButton.setBounds(210, 250, 100, 30);
         contentPane.add(articleWriteButton);
 
         articleWriteButton.addActionListener(new ActionListener() {
@@ -102,7 +111,7 @@ public class OtherBoardUI extends JFrame {
 
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleReadButton.setBounds(100, 180, 90, 30);
+        articleReadButton.setBounds(100, 250, 90, 30);
         contentPane.add(articleReadButton);
 
         articleReadButton.addActionListener(new ActionListener() {
