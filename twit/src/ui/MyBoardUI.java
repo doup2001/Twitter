@@ -19,9 +19,11 @@ public class MyBoardUI extends JFrame {
     private JList list;
     private int articleNum;
     DefaultListModel listModel;
+    private Controller controller;  // Controller 클래스의 인스턴스 추가
 
     public MyBoardUI(String ID) {
         this.ID = ID;
+        this.controller = new Controller();
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
@@ -35,6 +37,33 @@ public class MyBoardUI extends JFrame {
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
+        JButton followerButton = new JButton("팔로워");
+        followerButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+
+        followerButton.setBounds(220, 130, 80, 30);
+        contentPane.add(followerButton);
+
+        JButton followingButton = new JButton("팔로잉");
+        followingButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+
+        followingButton.setBounds(300, 130, 80, 30);
+        contentPane.add(followingButton);
+
+        followerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<String> followerList = controller.getFollower(ID);
+                showFollowList("내 팔로워 목록", followerList);
+            }
+        });
+
+        followingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<String> followingList = controller.getFollowing(ID);
+                showFollowList("내 팔로잉 목록", followingList);
+            }
+        });
 
         JButton btnNewButton = new JButton("로그아웃");
         btnNewButton.setForeground(new Color(220, 45, 59));
@@ -76,8 +105,6 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-
-
         button.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         button.setBounds(285, 47, 100, 30);
         contentPane.add(button);
@@ -115,7 +142,6 @@ public class MyBoardUI extends JFrame {
                 }
             }
         });
-
 
         ArrayList<Post> arr;
         arr = controller.readPost(ID);
@@ -260,8 +286,41 @@ public class MyBoardUI extends JFrame {
 
         return false;
     }
+    private void showFollowList(String title, ArrayList<String> userList) {
+        JFrame followListFrame = new JFrame();
+        JPanel jpMain = new JPanel();
+        jpMain.setLayout(new BorderLayout());
+        JPanel jp = new JPanel();
 
+        followListFrame.setTitle(title);
+        followListFrame.setSize(300, 300);
+        followListFrame.setVisible(true);
+        jp.setLayout(new GridLayout(userList.size(), 2, 10, 10));
 
+        JLabel[] followUserId = new JLabel[1000];
+        JButton[] followerBoardButton = new JButton[1000];
+
+        for (int i = 0; i < userList.size(); i++) {
+            String followerId = userList.get(i);
+            followUserId[i] = new JLabel(followerId);
+            followerBoardButton[i] = new JButton(followerId + "의 피드");
+            followerBoardButton[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                    System.out.println(followerId + "'s Board!");
+                    OtherBoardUI otherBoardUI = new OtherBoardUI(followerId, ID);
+                    otherBoardUI.setVisible(true);
+                }
+            });
+
+            jp.add(followUserId[i]);
+            jp.add(followerBoardButton[i]);
+        }
+
+        jpMain.add(jp, BorderLayout.NORTH);
+        followListFrame.getContentPane().add(new JScrollPane(jpMain), BorderLayout.CENTER);
+    }
 
 }
 

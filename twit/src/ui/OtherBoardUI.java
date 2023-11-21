@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-// 각각의 유저들, 나ui랑 똑같은 것
 public class OtherBoardUI extends JFrame {
 
     String otherUserID;
@@ -19,6 +18,7 @@ public class OtherBoardUI extends JFrame {
     private JList list;
     private JTextArea writeArea;
     private JTextArea readArea;
+    private Controller controller;
 
     public OtherBoardUI(String otherUserID, String userID) {
         this.otherUserID = otherUserID;
@@ -32,7 +32,7 @@ public class OtherBoardUI extends JFrame {
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
 
-        Controller controller = new Controller();
+        controller = new Controller();
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -43,7 +43,6 @@ public class OtherBoardUI extends JFrame {
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
-        // 글 작성
         writeArea = new JTextArea("");
         writeArea.setBounds(40, 170, 320, 73);
         writeArea.setBorder(BorderFactory.createCompoundBorder(
@@ -51,8 +50,6 @@ public class OtherBoardUI extends JFrame {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         contentPane.add(writeArea);
 
-
-        // 글 불러오기
         readArea = new JTextArea("read");
         readArea.setBounds(0, 400, 350, 400);
 
@@ -73,25 +70,48 @@ public class OtherBoardUI extends JFrame {
                 String article = writeArea.getText();
                 int num = controller.getArticleNextNum();
                 controller.insertPost(new Post(num, otherUserID, article));
-                ArrayList<Post> arr = controller.readPost(otherUserID);
-                arr = controller.listSort(arr);
-
-                if (arr.size() == 0) {
-                    listModel = new DefaultListModel();
-                    String info = otherUserID + "님은 아직 트윗하지 않았습니다";
-                    listModel.addElement(info);
-                } else {
-                    listModel = new DefaultListModel();
-                    for (Post res : arr) {
-                        String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
-                        listModel.addElement(post);
-                    }
-                }
-                list.setModel(listModel);
+                updatePostList();
             }
         });
 
+        JButton articleReadButton = new JButton("새로고침");
+        articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        articleReadButton.setBounds(100, 250, 90, 30);
+        contentPane.add(articleReadButton);
+
+        articleReadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updatePostList();
+            }
+        });
+
+        // Follow Button
+        JButton followButton = createFollowButton(otherUserID);
+        followButton.setBounds(250, 130, 90, 30);
+        contentPane.add(followButton);
+
+        JLabel MainLogo = new JLabel("");
+        Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
+        MainLogo.setIcon(new ImageIcon(img));
+        MainLogo.setBounds(184, 25, 30, 30);
+        contentPane.add(MainLogo);
+
+        JButton BacktoMain = new JButton("back");
+        BacktoMain.setBounds(30, 25, 70, 30);
+        contentPane.add(BacktoMain);
+        BacktoMain.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // main으로 이동
+                dispose();
+                MainBoardUI main = new MainBoardUI(userID);
+                main.setTitle("Twitter");
+                main.setVisible(true);
+            }
+        });
+    }
+
+    private void updatePostList() {
         ArrayList<Post> arr = controller.readPost(otherUserID);
         arr = controller.listSort(arr);
 
@@ -103,55 +123,30 @@ public class OtherBoardUI extends JFrame {
             listModel = new DefaultListModel();
             for (Post res : arr) {
                 String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
                 listModel.addElement(post);
             }
         }
         list.setModel(listModel);
+    }
 
-        JButton articleReadButton = new JButton("새로고침");
-        articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleReadButton.setBounds(100, 250, 90, 30);
-        contentPane.add(articleReadButton);
+    private JButton createFollowButton(String userid) {
+        JButton button = new JButton(controller.setFollowButton(userID, userid));
+        setupFollowButton(button, userid);
+        return button;
+    }
 
-        articleReadButton.addActionListener(new ActionListener() {
+    private void setupFollowButton(JButton button, String userid) {
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Post> arr = controller.readPost(otherUserID);
-                arr = controller.listSort(arr);
-
-                if (arr.size() == 0) {
-                    listModel = new DefaultListModel();
-                    String info = otherUserID + "님은 아직 트윗하지 않았습니다";
-                    listModel.addElement(info);
-                } else {
-                    listModel = new DefaultListModel();
-                    for (Post res : arr) {
-                        String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
-                        listModel.addElement(post);
-                    }
+                String followState = controller.setFollowButton(userID, userid);
+                if (followState.equals("follow")) {
+                    controller.updateFollow(userID, userid);
+                    button.setText("unfollow");
+                } else if (followState.equals("unfollow")) {
+                    controller.updateFollow(userID, userid);
+                    button.setText("follow");
                 }
-                list.setModel(listModel);
-            }
-        });
-
-        JLabel MainLogo = new JLabel("");
-        Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
-        MainLogo.setIcon(new ImageIcon(img));
-        MainLogo.setBounds(184, 25, 30, 30);
-        contentPane.add(MainLogo);
-
-        JButton BacktoMain = new JButton(new ImageIcon("/img/backArrow.png"));
-        BacktoMain.setBounds(30, 25, 30, 30);
-        contentPane.add(BacktoMain);
-        BacktoMain.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // main으로 이동
-                dispose();
-                MainBoardUI main = new MainBoardUI(userID);
-                main.setTitle("Twitter");
-                main.setVisible(true);
             }
         });
     }
