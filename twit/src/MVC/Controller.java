@@ -238,6 +238,27 @@ public class Controller {
         }
     }
 
+    public boolean userExists(String userId) {
+        boolean result = false;
+        try {
+            st = connect.createStatement();
+            rs = st.executeQuery("select count(*) from account where id = '" + userId + "';");
+            while (rs.next()) {
+                int count = rs.getInt(1);
+                result = count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                st.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
     class PostNumComparator implements Comparator<Post> {
         @Override
         public int compare(Post o1, Post o2) {

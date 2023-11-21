@@ -19,6 +19,7 @@ public class MainBoardUI extends JFrame {
     private final JButton lowBarFollowingBoardButton;
     private final JButton lowBarFollowButton;
     private final JButton lowBarHisBoard;
+    private final JButton searchButton;  // 추가된 부분
 
     public MainBoardUI(String ID) {
         this.ID = ID;
@@ -42,6 +43,17 @@ public class MainBoardUI extends JFrame {
         articleReadButton = new JButton("Refresh");
         articleReadButton.setBounds(310, 120, 80, 30);
         contentPane.add(articleReadButton);
+
+        searchButton = new JButton("Search");  // 추가된 부분
+        searchButton.setBounds(200, 620, 80, 40);  // 추가된 부분
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Search 버튼을 누를 때 SearchUI를 생성하여 표시
+                SearchUI searchUI = new SearchUI(ID);
+                searchUI.setVisible(true);
+            }
+        });
 
         ArrayList<Post> arr = controller.readPost(ID);
         ArrayList<String> followArr = controller.getFollowing(ID);
@@ -100,7 +112,7 @@ public class MainBoardUI extends JFrame {
         });
 
         lowBarFollowButton = new JButton("Follow");
-        lowBarFollowButton.setBounds(160, 620, 80, 40);
+        lowBarFollowButton.setBounds(115, 620, 80, 40);
         lowBarFollowButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -125,6 +137,7 @@ public class MainBoardUI extends JFrame {
         contentPane.add(lowBarFollowingBoardButton);
         contentPane.add(lowBarFollowButton);
         contentPane.add(lowBarHisBoard);
+        contentPane.add(searchButton);  // 추가된 부분
 
         ImageIcon mainLogoIcon = new ImageIcon(getClass().getResource("/img/mainLogo.png"));
         JLabel mainLogo = new JLabel(mainLogoIcon);
