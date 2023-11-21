@@ -27,6 +27,14 @@ CREATE TABLE article (
     FOREIGN KEY(ID) REFERENCES account(id)
 );
 
+CREATE TABLE like_post (
+    post_num INT,
+    liker_id VARCHAR(20),
+    PRIMARY KEY(post_num, liker_id),
+    FOREIGN KEY(post_num) REFERENCES article(num),
+    FOREIGN KEY(liker_id) REFERENCES account(id)
+);
+
 select * from article;
 select * from follow;
 select * from account;

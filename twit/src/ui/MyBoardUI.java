@@ -81,7 +81,7 @@ public class MyBoardUI extends JFrame {
         contentPane.setLayout(null);
 
         writeArea = new JTextArea("");
-        writeArea.setBounds(40, 95, 320, 73);
+        writeArea.setBounds(40, 170, 320, 73);
         writeArea.setBorder(BorderFactory.createCompoundBorder(
                 writeArea.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -91,7 +91,7 @@ public class MyBoardUI extends JFrame {
         readArea.setBounds(0, 400, 350, 400);
 
         list = new JList();
-        list.setBounds(40, 240, 320, 350);
+        list.setBounds(40, 300, 320, 300);
         list.setForeground(new Color(254, 255, 255));
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
@@ -131,7 +131,7 @@ public class MyBoardUI extends JFrame {
 
         JButton articleWriteButton = new JButton("글 작성하기");
         articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleWriteButton.setBounds(210, 180, 100, 30);
+        articleWriteButton.setBounds(210, 250, 100, 30);
         contentPane.add(articleWriteButton);
 
         articleWriteButton.addActionListener(new ActionListener() {
@@ -164,7 +164,7 @@ public class MyBoardUI extends JFrame {
 
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleReadButton.setBounds(100, 180, 90, 30);
+        articleReadButton.setBounds(100, 250, 90, 30);
         contentPane.add(articleReadButton);
 
         articleReadButton.addActionListener(new ActionListener() {
@@ -222,8 +222,8 @@ public class MyBoardUI extends JFrame {
         MainLogo.setBounds(184, 25, 30, 30);
         contentPane.add(MainLogo);
 
-        JButton BacktoMain = new JButton(new ImageIcon("/img/backArrow.png"));
-        BacktoMain.setBounds(30, 25, 30, 30);
+        JButton BacktoMain = new JButton("back");
+        BacktoMain.setBounds(30, 25, 70, 30);
         contentPane.add(BacktoMain);
         BacktoMain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
