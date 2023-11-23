@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -64,21 +66,7 @@ public class MainBoardUI extends JFrame {
         }
         arr = controller.listSort(arr);
 
-        if (arr.size() == 0) {
-            listModel = new DefaultListModel();
-            String info = "불러올 글이 없습니다";
-            listModel.addElement(info);
-        } else {
-            listModel = new DefaultListModel();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy년 MM월 dd일 HH시 mm분");
-
-            for (Post res : arr) {
-                String formattedTime = res.getCreatedAt().format(formatter);
-                String post = res.getNum() + " " + "(" + res.getId() + ") " + formattedTime + " " + res.getArticle() + "\n";
-                listModel.addElement(post);
-            }
-        }
-        list.setModel(listModel);
+        createListModel(arr);
 
         articleReadButton.addActionListener(new ActionListener() {
             @Override
@@ -91,18 +79,7 @@ public class MainBoardUI extends JFrame {
                 }
                 arr = controller.listSort(arr);
 
-                if (arr.size() == 0) {
-                    listModel = new DefaultListModel();
-                    String info = "불러올 글이 없습니다";
-                    listModel.addElement(info);
-                } else {
-                    listModel = new DefaultListModel();
-                    for (Post res : arr) {
-                        String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-                        listModel.addElement(post);
-                    }
-                }
-                list.setModel(listModel);
+                createListModel(arr);
             }
         });
 
@@ -152,13 +129,43 @@ public class MainBoardUI extends JFrame {
         setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                MainBoardUI mainBoardUI = new MainBoardUI("testUser");
-                mainBoardUI.setVisible(true);
+    private DefaultListModel createListModel(ArrayList<Post> posts) {
+        DefaultListModel model = new DefaultListModel();
+
+        if (posts.size() == 0) {
+            String info = "불러올 글이 없습니다";
+            model.addElement(info);
+        } else {
+            for (Post res : posts) {
+                // 게시물의 num을 이용하여 데이터베이스에서 시간 정보를 가져오기
+                LocalDateTime createdAt = getCreatedAtFromDatabase(res.getNum());
+                String formattedTime = createdAt.format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+
+                String post = "[ (" + res.getId() + ") " + formattedTime + " ] " + res.getArticle() + "\n";
+                model.addElement(post);
             }
-        });
+        }
+
+        list.setModel(model); // JList에 모델을 설정
+        return model;
     }
+
+    // num을 이용하여 데이터베이스에서 시간 정보를 가져오는 메서드
+    private LocalDateTime getCreatedAtFromDatabase(int num) {
+        LocalDateTime createdAt = null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+            PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
+            st.setInt(1, num);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return createdAt;
+    }
+
 }

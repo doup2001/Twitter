@@ -7,9 +7,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -319,17 +318,36 @@ public class MyBoardUI extends JFrame {
             listModel.addElement(info);
         } else {
             listModel = new DefaultListModel();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy년 MM월 dd일 HH시 mm분");
-
             for (Post res : arr) {
-                String formattedTime = res.getCreatedAt().format(formatter);
-                String post = "(" + res.getId() + ") " + formattedTime + " " + res.getArticle() + "\n";
+                // 게시물의 num을 이용하여 데이터베이스에서 시간 정보를 가져오기
+                LocalDateTime createdAt = getCreatedAtFromDatabase(res.getNum());
+                String formattedTime = createdAt.format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+                String post = res.getNum() + " " +"(" + res.getId() + ") " + formattedTime + " ] " + res.getArticle() + "\n";
                 listModel.addElement(post);
             }
         }
         list.setModel(listModel);
         writeArea.setText("");  // writeArea 초기화
     }
+
+    // num을 이용하여 데이터베이스에서 시간 정보를 가져오는 메서드
+    private LocalDateTime getCreatedAtFromDatabase(int num) {
+        LocalDateTime createdAt = null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+            PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
+            st.setInt(1, num);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return createdAt;
+    }
+
 }
 
 
