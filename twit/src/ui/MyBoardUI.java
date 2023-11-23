@@ -48,7 +48,7 @@ public class MyBoardUI extends JFrame {
         JButton followingButton = new JButton("팔로잉");
         followingButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
 
-        followingButton.setBounds(300, 130, 80, 30);
+        followingButton.setBounds(290, 130, 80, 30);
         contentPane.add(followingButton);
 
         followerButton.addActionListener(new ActionListener() {
@@ -283,6 +283,7 @@ public class MyBoardUI extends JFrame {
 
         followListFrame.setTitle(title);
         followListFrame.setSize(300, 300);
+        followListFrame.setLocationRelativeTo(null); // 이 부분을 추가하여 다이얼로그를 화면 중앙에 위치시킵니다.
         followListFrame.setVisible(true);
         jp.setLayout(new GridLayout(userList.size(), 2, 10, 10));
 
@@ -305,11 +306,13 @@ public class MyBoardUI extends JFrame {
 
             jp.add(followUserId[i]);
             jp.add(followerBoardButton[i]);
+
         }
 
         jpMain.add(jp, BorderLayout.NORTH);
         followListFrame.getContentPane().add(new JScrollPane(jpMain), BorderLayout.CENTER);
     }
+
 
     private void updatePostList(ArrayList<Post> arr) {
         if (arr.size() == 0) {

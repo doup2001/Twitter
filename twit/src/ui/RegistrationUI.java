@@ -196,7 +196,44 @@ public class RegistrationUI extends JFrame {
         btnNewButton2.setBounds(69, 570, 262, 40);
         contentPane.add(btnNewButton2);
 
+        btnNewButton2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
 
+                // 다이얼로그 상자를 통해 아이디 찾기 또는 비밀번호 찾기 선택 받기
+                String[] options = {"아이디 찾기", "비밀번호 찾기"};
+                int choice = JOptionPane.showOptionDialog(null, "아이디 찾기 또는 비밀번호 찾기를 선택하세요.", "찾기 선택", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+                if (choice == 0) {
+                    // 아이디 찾기 선택 시
+                    FindIDUI findIDUI = new FindIDUI();
+                    findIDUI.setTitle("Find ID");
+                    findIDUI.setVisible(true);
+                    findIDUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                } else if (choice == 1) {
+                    // 비밀번호 찾기 선택 시
+                    FindPasswordUI findPasswordUI = new FindPasswordUI();
+                    findPasswordUI.setTitle("Find Password");
+                    findPasswordUI.setVisible(true);
+                    findPasswordUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+            }
+        });
+
+
+        // 뒤로가기
+        JButton BacktoMain = new JButton("back");
+        BacktoMain.setBounds(30, 25, 70, 30);
+        contentPane.add(BacktoMain);
+        BacktoMain.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // main으로 이동
+                dispose();
+                LoginUI main = new LoginUI();
+                main.setTitle("Login");
+                main.setVisible(true);
+            }
+        });
         // 로고
         JLabel RegiLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/registrationIcon.png")).getImage();
