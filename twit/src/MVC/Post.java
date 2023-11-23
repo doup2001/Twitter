@@ -40,6 +40,15 @@ public class Post {
     public void setArticle(String article) {
         this.article = article;
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public int getLikes() {
         return likes;
     }

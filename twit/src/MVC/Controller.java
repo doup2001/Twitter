@@ -1,6 +1,7 @@
 package MVC;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -51,8 +52,11 @@ public class Controller {
     public void insertPost(Post post) {
         try {
             st = connect.createStatement();
-            st.executeUpdate(
-                    "insert into article values ('"+ post.num +"', '" + post.id + "', '" + post.article + "');");
+            LocalDateTime currentTime = LocalDateTime.now();
+            post.setCreatedAt(currentTime); // 작성 시간 설정
+            st.executeUpdate("INSERT INTO article (num, ID, article, createdAt) VALUES ('" +
+                    post.getNum() + "', '" + post.getId() + "', '" + post.getArticle() + "', '" +
+                    post.getCreatedAt() + "');");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -63,6 +67,7 @@ public class Controller {
             }
         }
     }
+
 
     // 게시물 목록 출력
     public ArrayList<Post> readPost(String id) {
@@ -258,6 +263,8 @@ public class Controller {
         }
         return result;
     }
+
+
 
     class PostNumComparator implements Comparator<Post> {
         @Override

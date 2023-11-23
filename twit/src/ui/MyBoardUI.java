@@ -7,7 +7,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MyBoardUI extends JFrame {
@@ -147,20 +150,7 @@ public class MyBoardUI extends JFrame {
         arr = controller.readPost(ID);
         arr = controller.listSort(arr);
 
-        if (arr.size() == 0 ) {
-            listModel = new DefaultListModel();
-            String info = ID + "님은 아직 트윗하지 않았습니다";
-            listModel.addElement(info);
-        }
-        else {
-            listModel = new DefaultListModel();
-            for (Post res : arr) {
-                String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
-                listModel.addElement(post);
-            }
-        }
-        list.setModel(listModel);
+        updatePostList(arr);
 
         JButton articleWriteButton = new JButton("글 작성하기");
         articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
@@ -174,26 +164,14 @@ public class MyBoardUI extends JFrame {
                 int num = controller.getArticleNextNum();
                 controller.insertPost(new Post(num, ID, article));
                 readArea.setText("");
-                list.clearSelection(); // clearSelection() 호출 위치 변경
+                list.clearSelection();
 
-                ArrayList<Post> arr;
-                arr = controller.readPost(ID);
+                ArrayList<Post> arr = controller.readPost(ID);
                 arr = controller.listSort(arr);
-
-                if (arr.size() == 0) {
-                    listModel = new DefaultListModel();
-                    String info = ID + "님은 아직 트윗하지 않았습니다";
-                    listModel.addElement(info);
-                } else {
-                    listModel = new DefaultListModel();
-                    for (Post res : arr) {
-                        String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-                        listModel.addElement(post);
-                    }
-                }
-                list.setModel(listModel);
+                updatePostList(arr);
             }
         });
+
 
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
@@ -205,22 +183,10 @@ public class MyBoardUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<Post> arr = controller.readPost(ID);
                 arr = controller.listSort(arr);
-
-                if (arr.size() == 0) {
-                    listModel = new DefaultListModel();
-                    String info = ID + "님은 아직 트윗하지 않았습니다";
-                    listModel.addElement(info);
-                } else {
-                    listModel = new DefaultListModel();
-                    for (Post res : arr) {
-                        String post =  "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
-
-                        listModel.addElement(post);
-                    }
-                }
-                list.setModel(listModel);
+                updatePostList(arr);
             }
         });
+
 
         JButton articleDeleteButton = new JButton("글 삭제하기");
         articleDeleteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
@@ -230,10 +196,29 @@ public class MyBoardUI extends JFrame {
         articleDeleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.deletePost(articleNum);
-                System.out.println(articleNum + "'s post deleted!");
+                // 글 삭제 여부 다이얼로그 표시
+                int option = JOptionPane.showConfirmDialog(
+                        null,
+                        "게시물을 삭제하시겠습니까?",
+                        "게시물 삭제 확인",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) {
+                    // YES를 선택한 경우에만 글 삭제 진행
+                    controller.deletePost(articleNum);
+                    System.out.println(articleNum + "번 게시물이 삭제되었습니다!");
+
+                    // 삭제 후 업데이트된 포스트 목록 가져오기
+                    ArrayList<Post> updatedPostList = controller.readPost(ID);
+                    updatedPostList = controller.listSort(updatedPostList);
+
+                    // 업데이트된 포스트 목록으로 UI 업데이트
+                    updatePostList(updatedPostList);
+                }
             }
         });
+
+
 
         JButton articleUpdateButton = new JButton("글 수정하기");
         articleUpdateButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
@@ -248,6 +233,7 @@ public class MyBoardUI extends JFrame {
                 changePostUI.setVisible(true);
             }
         });
+
 
         JLabel MainLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
@@ -289,6 +275,7 @@ public class MyBoardUI extends JFrame {
 
         return false;
     }
+
     private void showFollowList(String title, ArrayList<String> userList) {
         JFrame followListFrame = new JFrame();
         JPanel jpMain = new JPanel();
@@ -325,6 +312,24 @@ public class MyBoardUI extends JFrame {
         followListFrame.getContentPane().add(new JScrollPane(jpMain), BorderLayout.CENTER);
     }
 
+    private void updatePostList(ArrayList<Post> arr) {
+        if (arr.size() == 0) {
+            listModel = new DefaultListModel();
+            String info = ID + "님은 아직 트윗하지 않았습니다";
+            listModel.addElement(info);
+        } else {
+            listModel = new DefaultListModel();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy년 MM월 dd일 HH시 mm분");
+
+            for (Post res : arr) {
+                String formattedTime = res.getCreatedAt().format(formatter);
+                String post = "(" + res.getId() + ") " + formattedTime + " " + res.getArticle() + "\n";
+                listModel.addElement(post);
+            }
+        }
+        list.setModel(listModel);
+        writeArea.setText("");  // writeArea 초기화
+    }
 }
 
 

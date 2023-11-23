@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MainBoardUI extends JFrame {
@@ -69,8 +70,11 @@ public class MainBoardUI extends JFrame {
             listModel.addElement(info);
         } else {
             listModel = new DefaultListModel();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy년 MM월 dd일 HH시 mm분");
+
             for (Post res : arr) {
-                String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
+                String formattedTime = res.getCreatedAt().format(formatter);
+                String post = res.getNum() + " " + "(" + res.getId() + ") " + formattedTime + " " + res.getArticle() + "\n";
                 listModel.addElement(post);
             }
         }

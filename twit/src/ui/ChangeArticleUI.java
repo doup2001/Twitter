@@ -40,30 +40,36 @@ public class ChangeArticleUI extends JFrame {
         textField.setColumns(10);
 
         JButton btnSearch = new JButton("수정하기");
+        // 글 수정하기 버튼 클릭 시 실행되는 ActionListener
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 String articleContent = textField.getText();
+
                 try {
-                    System.out.println("update article content ");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
 
-                    Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/twit",
-                            "root", "David100894@");
+                    // 수정된 부분: 글 내용과 작성 시간을 함께 업데이트
+                    PreparedStatement st = con.prepareStatement(
+                            "UPDATE article SET article = ?, createdAt = CURRENT_TIMESTAMP WHERE num = ?;"
+                    );
 
-                    PreparedStatement st = (PreparedStatement) con
-                            .prepareStatement("Update article set content = '" + articleContent + "' where num ='" + articleNum + "';");
+
+                    st.setString(1, articleContent);
+                    st.setInt(2, articleNum);
 
                     st.executeUpdate();
-                    JOptionPane.showMessageDialog(btnSearch, "게시글이 수정되었습니다.", "Article changed", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                            btnSearch, "게시글이 수정되었습니다.", "Article changed", JOptionPane.PLAIN_MESSAGE
+                    );
 
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
-                }
-                finally {
+                } finally {
                     setVisible(false);
                 }
             }
         });
+
 
         btnSearch.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
         btnSearch.setBackground(new Color(221, 221, 221));
@@ -80,4 +86,6 @@ public class ChangeArticleUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
+
+
 }
