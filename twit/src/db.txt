@@ -22,7 +22,8 @@ CREATE TABLE follow (
 CREATE TABLE article (
     num INT,
     ID VARCHAR(20),
-    content TEXT,
+    article TEXT,
+    createdAt TIMESTAMP,
     PRIMARY KEY(num),
     FOREIGN KEY(ID) REFERENCES account(id)
 );
