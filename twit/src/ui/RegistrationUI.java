@@ -280,5 +280,8 @@ public class RegistrationUI extends JFrame {
 
         contentPane.add(btnNewButton2);
 
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
+
 }

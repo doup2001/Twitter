@@ -76,5 +76,8 @@ public class ChangeArticleUI extends JFrame {
         lblEnterNewArticle.setForeground(new Color(254, 255, 255));
         lblEnterNewArticle.setBounds(34, 32, 72, 27);
         contentPane.add(lblEnterNewArticle);
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 }

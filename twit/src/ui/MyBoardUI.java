@@ -267,6 +267,9 @@ public class MyBoardUI extends JFrame {
                 main.setVisible(true);
             }
         });
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
     private boolean isOldPasswordCorrect(String inputPassword) {

@@ -143,6 +143,9 @@ public class MainBoardUI extends JFrame {
         JLabel mainLogo = new JLabel(mainLogoIcon);
         mainLogo.setBounds(184, 25, mainLogoIcon.getIconWidth(), mainLogoIcon.getIconHeight());
         contentPane.add(mainLogo);
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
     public static void main(String[] args) {

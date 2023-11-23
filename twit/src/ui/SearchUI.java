@@ -56,6 +56,9 @@ public class SearchUI extends JFrame {
 
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         setVisible(true);
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
     private boolean userExists(String userId) {

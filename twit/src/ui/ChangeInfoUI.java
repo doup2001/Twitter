@@ -128,6 +128,9 @@ public class ChangeInfoUI extends JFrame {
         btnChangeInfo.setForeground(new Color(31, 31, 31));
         btnChangeInfo.setBounds(100, 250, 200, 33);  // 높이를 늘림
         contentPane.add(btnChangeInfo);
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
     private boolean isValidDateFormat(String date) {

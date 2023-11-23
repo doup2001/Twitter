@@ -121,8 +121,9 @@ public class LoginUI extends JFrame {
         btnNewButton1.setForeground(new Color(31, 31, 31));
         btnNewButton1.setBounds(69, 474, 262, 40);
         btnNewButton1.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
-        btnNewButton1.addActionListener(new ActionListener() {
 
+        // btnNewButton1의 ActionListener 부분에서 수정
+        btnNewButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String id = textField.getText();
                 String password = passwordField.getText();
@@ -140,15 +141,19 @@ public class LoginUI extends JFrame {
                         MainBoardUI main = new MainBoardUI(id);
                         main.setTitle("Twitter");
                         main.setVisible(true);
-                        JOptionPane.showMessageDialog(btnNewButton1, "환영합니다", "Login", JOptionPane.PLAIN_MESSAGE);
+                        // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
+                        JOptionPane.showMessageDialog(null, "환영합니다", "Login", JOptionPane.PLAIN_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(btnNewButton1, "아이디 또는 비밀번호가 틀렸습니다", "Failed to Login", JOptionPane.PLAIN_MESSAGE);
+                        // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
+                        JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 틀렸습니다", "Failed to Login", JOptionPane.PLAIN_MESSAGE);
                     }
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
             }
         });
+
+
 
         btnNewButton2 = new RoundedButton("새로 가입하기" );
         btnNewButton2.setForeground(new Color(254, 255, 255));
@@ -176,6 +181,8 @@ public class LoginUI extends JFrame {
         LoginLogo.setIcon(new ImageIcon(img));
         LoginLogo.setBounds(145, 85, 110, 110);
         contentPane.add(LoginLogo);
+
+        setLocationRelativeTo(null);
     }
 
 

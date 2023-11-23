@@ -27,6 +27,9 @@ public class AllUserUI extends JFrame {
 
         getContentPane().add(userPanel, BorderLayout.NORTH);
         setVisible(true);
+
+        setLocationRelativeTo(null);
+        setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
 
     private JButton createButton(String text, ActionListener actionListener) {
