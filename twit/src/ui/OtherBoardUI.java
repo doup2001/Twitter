@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class OtherBoardUI extends JFrame {
@@ -23,6 +26,7 @@ public class OtherBoardUI extends JFrame {
     public OtherBoardUI(String otherUserID, String userID) {
         this.otherUserID = otherUserID;
         this.userID = userID;
+
 
         setSize(500, 800);
         setResizable(false);
@@ -64,15 +68,17 @@ public class OtherBoardUI extends JFrame {
         articleWriteButton.setBounds(210, 250, 100, 30);
         contentPane.add(articleWriteButton);
 
+        // articleWriteButton의 액션 이벤트 수정
         articleWriteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String article = writeArea.getText();
                 int num = controller.getArticleNextNum();
-                controller.insertPost(new Post(num, otherUserID, article));
+                controller.insertPost(new Post(num, otherUserID, article)); // 여기서 userID 사용
                 updatePostList();
             }
         });
+
 
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
@@ -125,7 +131,9 @@ public class OtherBoardUI extends JFrame {
         } else {
             listModel = new DefaultListModel();
             for (Post res : arr) {
-                String post = res.getNum() + "   " + "(" + res.getId() + ")" + " \t " + res.getArticle() + "\n";
+                LocalDateTime createdAt = getCreatedAtFromDatabase(res.getNum());
+                String formattedTime = createdAt.format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+                String post = res.getNum() + " " +"(" + res.getId() + ") " + formattedTime + " ] " + res.getArticle() + "\n";
                 listModel.addElement(post);
             }
         }
@@ -152,5 +160,22 @@ public class OtherBoardUI extends JFrame {
                 }
             }
         });
+    }
+
+    private LocalDateTime getCreatedAtFromDatabase(int num) {
+        LocalDateTime createdAt = null;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+            PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
+            st.setInt(1, num);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return createdAt;
     }
 }

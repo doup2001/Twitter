@@ -1,8 +1,6 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -12,16 +10,11 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.imageio.ImageIO;
-import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
@@ -38,18 +31,14 @@ public class LoginUI extends JFrame {
 
     private JTextField textField;
     private JPasswordField passwordField;
-    private JButton btnNewButton1;
-    private JButton btnNewButton2;
+    private JButton LoginButton;
+    private JButton RegisterButton;
     private JLabel label;
     private JPanel contentPane;
 
-    //버튼 디자인
+    //라운드 버튼 디자인
     public class RoundedButton extends JButton {
-        public RoundedButton() { super(); decorate(); }
         public RoundedButton(String text) { super(text); decorate(); }
-        public RoundedButton(Action action) { super(action); decorate(); }
-        public RoundedButton(Icon icon) { super(icon); decorate(); }
-        public RoundedButton(String text, Icon icon) { super(text, icon); decorate(); }
         protected void decorate() { setBorderPainted(false); setOpaque(false); }
         @Override
         protected void paintComponent(Graphics g) {
@@ -75,34 +64,29 @@ public class LoginUI extends JFrame {
         }
     }
 
+    // 로그인
     public LoginUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
         setResizable(false);
+
+        // 기본 패널
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("트위터에 로그인하기");
-        lblNewLabel.setBounds(14, 199, 373, 93);
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setForeground(new Color(221, 228, 232));
-        lblNewLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 30));
-        contentPane.add(lblNewLabel);
+        // 라벨
+        JLabel HomeLabel = new JLabel("트위터에 로그인하기");
+        HomeLabel.setBounds(14, 199, 373, 93);
+        HomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        HomeLabel.setForeground(new Color(221, 228, 232));
+        HomeLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 30));
+        contentPane.add(HomeLabel);
 
-        textField = new JTextField();
-        textField.setBounds(69, 343, 262, 33);
-        textField.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
-        contentPane.add(textField);
-        textField.setColumns(10);
-
-        passwordField = new JPasswordField();
-        passwordField.setBounds(69, 403, 262, 33);
-        passwordField.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
-        contentPane.add(passwordField);
-
+        // 아이디 입력 창
         JLabel lblUsername = new JLabel("사용자 아이디");
         lblUsername.setHorizontalAlignment(SwingConstants.CENTER);
         lblUsername.setBounds(66, 316, 76, 27);
@@ -110,20 +94,33 @@ public class LoginUI extends JFrame {
         lblUsername.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         contentPane.add(lblUsername);
 
+        textField = new JTextField();
+        textField.setBounds(69, 343, 262, 33);
+        textField.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
+        contentPane.add(textField);
+        textField.setColumns(10);
+
+        // 비밀번호 입력
         JLabel lblPassword = new JLabel("비밀번호");
         lblPassword.setBounds(71, 378, 45, 27);
         lblPassword.setForeground(new Color(254, 255, 255));
         lblPassword.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         contentPane.add(lblPassword);
 
-        btnNewButton1 = new RoundedButton("로그인하기");
-        btnNewButton1.setBackground(new Color(221, 221, 221));
-        btnNewButton1.setForeground(new Color(31, 31, 31));
-        btnNewButton1.setBounds(69, 474, 262, 40);
-        btnNewButton1.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
+        passwordField = new JPasswordField();
+        passwordField.setBounds(69, 403, 262, 33);
+        passwordField.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
+        contentPane.add(passwordField);
 
-        // btnNewButton1의 ActionListener 부분에서 수정
-        btnNewButton1.addActionListener(new ActionListener() {
+        // 로그인 버튼
+        LoginButton = new RoundedButton("로그인하기");
+        LoginButton.setBackground(new Color(221, 221, 221));
+        LoginButton.setForeground(new Color(31, 31, 31));
+        LoginButton.setBounds(69, 474, 262, 40);
+        LoginButton.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
+        contentPane.add(LoginButton);
+
+        LoginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String id = textField.getText();
                 String password = passwordField.getText();
@@ -153,13 +150,12 @@ public class LoginUI extends JFrame {
             }
         });
 
-
-
-        btnNewButton2 = new RoundedButton("새로 가입하기" );
-        btnNewButton2.setForeground(new Color(254, 255, 255));
-        btnNewButton2.setBounds(69, 522, 262, 40);
-        btnNewButton2.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
-        btnNewButton2.addActionListener(new ActionListener() {
+        // 회원가입 버튼
+        RegisterButton = new RoundedButton("새로 가입하기" );
+        RegisterButton.setForeground(new Color(254, 255, 255));
+        RegisterButton.setBounds(69, 522, 262, 40);
+        RegisterButton.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
+        RegisterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 RegistrationUI ur = new RegistrationUI();
@@ -168,9 +164,9 @@ public class LoginUI extends JFrame {
             }
         });
 
-        contentPane.add(btnNewButton1);
-        contentPane.add(btnNewButton2);
+        contentPane.add(RegisterButton);
 
+        // 라벨
         label = new JLabel("");
         label.setBackground(new Color(221, 228, 232));
         label.setBounds(0, 0, 400, 562);

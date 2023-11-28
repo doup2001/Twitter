@@ -21,35 +21,34 @@ public class MyBoardUI extends JFrame {
     private JList list;
     private int articleNum;
     DefaultListModel listModel;
-    private Controller controller;  // Controller 클래스의 인스턴스 추가
+    private Controller controller;
 
     public MyBoardUI(String ID) {
         this.ID = ID;
         this.controller = new Controller();
+
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
 
+        // 기본 패널 설정
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
 
+        // My Home에 들어갔을 때, ID 표시
         JLabel userIdLabel = new JLabel(ID + "의 피드");
         userIdLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 16));
         userIdLabel.setForeground(new Color(254, 255, 255));
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
+        // 팔로워 기능
         JButton followerButton = new JButton("팔로워");
         followerButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        followerButton.setForeground(new Color(254, 255, 255));
 
         followerButton.setBounds(220, 130, 80, 30);
         contentPane.add(followerButton);
-
-        JButton followingButton = new JButton("팔로잉");
-        followingButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-
-        followingButton.setBounds(290, 130, 80, 30);
-        contentPane.add(followingButton);
 
         followerButton.addActionListener(new ActionListener() {
             @Override
@@ -59,6 +58,14 @@ public class MyBoardUI extends JFrame {
             }
         });
 
+        // 팔로잉 기능
+        JButton followingButton = new JButton("팔로잉");
+        followingButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+
+        followingButton.setBounds(290, 130, 80, 30);
+        followingButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(followingButton);
+
         followingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,12 +74,13 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-        JButton btnNewButton = new JButton("로그아웃");
-        btnNewButton.setForeground(new Color(220, 45, 59));
-        btnNewButton.setBackground(UIManager.getColor("Button.disabledForeground"));
-        btnNewButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        // 로그아웃
+        JButton Logout = new JButton("로그아웃");
+        Logout.setForeground(new Color(220, 45, 59));
+        Logout.setBackground(UIManager.getColor("Button.disabledForeground"));
+        Logout.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         JFrame frame = new JFrame("Logout Window");
-        btnNewButton.addActionListener(new ActionListener() {
+        Logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String[] options = {"Yes", "No"};
                 int a = JOptionPane.showOptionDialog(frame, "Are you sure?", "Logout", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -85,12 +93,14 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-        btnNewButton.setBounds(285, 20, 100, 30);
-        contentPane.add(btnNewButton);
+        Logout.setBounds(285, 20, 100, 30);
+        contentPane.add(Logout);
 
-        JButton button = new JButton("개인정보 변경");
-        button.setBackground(UIManager.getColor("Button.disabledForeground"));
-        button.addActionListener(new ActionListener() {
+        // 개인정보 변경
+        JButton InfoChangeButton = new JButton("개인정보 변경");
+        InfoChangeButton.setBackground(UIManager.getColor("Button.disabledForeground"));
+        InfoChangeButton.setForeground(new Color(254, 255, 255));
+        InfoChangeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // 기존 비밀번호 확인
                 String oldPassword = JOptionPane.showInputDialog("기존 비밀번호를 입력하세요:");
@@ -107,10 +117,11 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-        button.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        button.setBounds(285, 47, 100, 30);
-        contentPane.add(button);
+        InfoChangeButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        InfoChangeButton.setBounds(285, 47, 100, 30);
+        contentPane.add(InfoChangeButton);
 
+        // 구성
         Controller controller = new Controller();
 
         setContentPane(contentPane);
@@ -126,6 +137,7 @@ public class MyBoardUI extends JFrame {
         readArea = new JTextArea("read");
         readArea.setBounds(0, 400, 350, 400);
 
+        // 글 읽어오는 부분
         list = new JList();
         list.setBounds(40, 300, 320, 300);
         list.setForeground(new Color(254, 255, 255));
@@ -145,15 +157,18 @@ public class MyBoardUI extends JFrame {
             }
         });
 
+        // 홈페이지 방문시, 글 업데이트 부분
         ArrayList<Post> arr;
         arr = controller.readPost(ID);
         arr = controller.listSort(arr);
 
         updatePostList(arr);
 
+        //글 작성
         JButton articleWriteButton = new JButton("글 작성하기");
         articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleWriteButton.setBounds(210, 250, 100, 30);
+        articleWriteButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleWriteButton);
 
         articleWriteButton.addActionListener(new ActionListener() {
@@ -171,10 +186,11 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-
+        // 새로고침
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleReadButton.setBounds(100, 250, 90, 30);
+        articleReadButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleReadButton);
 
         articleReadButton.addActionListener(new ActionListener() {
@@ -186,10 +202,11 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-
+        // 글 삭제
         JButton articleDeleteButton = new JButton("글 삭제하기");
         articleDeleteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleDeleteButton.setBounds(90, 630, 100, 30);
+        articleDeleteButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleDeleteButton);
 
         articleDeleteButton.addActionListener(new ActionListener() {
@@ -218,10 +235,11 @@ public class MyBoardUI extends JFrame {
         });
 
 
-
+        // 글 수정
         JButton articleUpdateButton = new JButton("글 수정하기");
         articleUpdateButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleUpdateButton.setBounds(210, 630, 100, 30);
+        articleUpdateButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleUpdateButton);
 
         articleUpdateButton.addActionListener(new ActionListener() {
@@ -233,16 +251,18 @@ public class MyBoardUI extends JFrame {
             }
         });
 
-
+        // 로고 사진
         JLabel MainLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
         MainLogo.setIcon(new ImageIcon(img));
         MainLogo.setBounds(184, 25, 30, 30);
         contentPane.add(MainLogo);
 
-        JButton BacktoMain = new JButton("back");
-        BacktoMain.setBounds(30, 25, 70, 30);
+        // 뒤로가기
+        JButton BacktoMain = new JButton(new ImageIcon(getClass().getResource("/img/backArrow.png")));
+        BacktoMain.setBounds(30, 25, 30, 30);
         contentPane.add(BacktoMain);
+
         BacktoMain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // main으로 이동

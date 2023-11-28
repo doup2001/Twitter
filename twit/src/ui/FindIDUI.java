@@ -18,7 +18,6 @@ public class FindIDUI extends JFrame {
     private JTextField lastnameField;
     private JTextField emailField;
     private JTextField birthdateField;
-    private JTextArea resultTextArea;
 
     public FindIDUI() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

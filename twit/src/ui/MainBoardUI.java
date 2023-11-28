@@ -20,7 +20,7 @@ public class MainBoardUI extends JFrame {
     private JList list;
     private JButton articleReadButton;
     private final JButton lowBarFollowingBoardButton;
-    private final JButton lowBarFollowButton;
+    private final JButton lowBarAllUserButton;
     private final JButton lowBarHisBoard;
     private final JButton searchButton;  // 추가된 부분
 
@@ -43,12 +43,13 @@ public class MainBoardUI extends JFrame {
         list.setForeground(new Color(254, 255, 255));
         contentPane.add(list);
 
-        articleReadButton = new JButton("Refresh");
-        articleReadButton.setBounds(310, 120, 80, 30);
+        articleReadButton = new JButton(new ImageIcon(getClass().getResource("/img/refreshPage.png")));
+        articleReadButton.setBounds(310, 120, 30, 30);
         contentPane.add(articleReadButton);
 
         searchButton = new JButton("Search");  // 추가된 부분
         searchButton.setBounds(200, 620, 80, 40);  // 추가된 부분
+        searchButton.setForeground(new Color(254, 255, 255));
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,6 +86,7 @@ public class MainBoardUI extends JFrame {
 
         lowBarFollowingBoardButton = new JButton("MainBoard");
         lowBarFollowingBoardButton.setBounds(30, 620, 80, 40);
+        lowBarFollowingBoardButton.setForeground(new Color(254, 255, 255));
         lowBarFollowingBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -92,9 +94,10 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        lowBarFollowButton = new JButton("All User");
-        lowBarFollowButton.setBounds(115, 620, 80, 40);
-        lowBarFollowButton.addActionListener(new ActionListener() {
+        lowBarAllUserButton = new JButton("All User");
+        lowBarAllUserButton.setBounds(115, 620, 80, 40);
+        lowBarAllUserButton.setForeground(new Color(254, 255, 255));
+        lowBarAllUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("AllUser!");
@@ -105,6 +108,7 @@ public class MainBoardUI extends JFrame {
 
         lowBarHisBoard = new JButton("MY Home");
         lowBarHisBoard.setBounds(290, 620, 80, 40); // 우측 아래로 이동
+        lowBarHisBoard.setForeground(new Color(254, 255, 255));
         lowBarHisBoard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +120,7 @@ public class MainBoardUI extends JFrame {
         });
 
         contentPane.add(lowBarFollowingBoardButton);
-        contentPane.add(lowBarFollowButton);
+        contentPane.add(lowBarAllUserButton);
         contentPane.add(lowBarHisBoard);
         contentPane.add(searchButton);  // 추가된 부분
 

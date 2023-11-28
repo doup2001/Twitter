@@ -15,23 +15,25 @@ import java.sql.SQLException;
 public class ChangeInfoUI extends JFrame {
 
     private JPanel contentPane;
-    private JTextField passwordTextField;
-    private JTextField dobTextField;
-    private JTextField emailTextField;  // 추가된 부분
-    private JLabel lblEnterNewPassword;
-    private JLabel lblEnterNewDOB;
-    private JLabel lblEnterNewEmail;  // 추가된 부분
+    private JTextField passwordTextField; // 패스워드 입력칸
+    private JTextField dobTextField; // 생년월일 입력칸
+    private JTextField emailTextField;  // 이메일 입력칸
+    private JLabel lblEnterNewPassword; // 수정할 비밀번
+    private JLabel lblEnterNewDOB; // 수정할 생년월일
+    private JLabel lblEnterNewEmail;  // 수정할 이메일
 
     public ChangeInfoUI(String name) {
         setBounds(500, 120, 400, 350);  // 높이를 늘림
         setResizable(false);
 
+        // 전체 패널
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        // 비밀번호
         lblEnterNewPassword = new JLabel("비밀번호 수정:");
         lblEnterNewPassword.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewPassword.setForeground(new Color(254, 255, 255));
@@ -44,18 +46,20 @@ public class ChangeInfoUI extends JFrame {
         contentPane.add(passwordTextField);
         passwordTextField.setColumns(10);
 
+        //이메일
         lblEnterNewEmail = new JLabel("이메일 수정:");  // 추가된 부분
         lblEnterNewEmail.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewEmail.setForeground(new Color(254, 255, 255));
         lblEnterNewEmail.setBounds(34, 82, 72, 27);
         contentPane.add(lblEnterNewEmail);
 
-        emailTextField = new JTextField();  // 추가된 부분
+        emailTextField = new JTextField();
         emailTextField.setFont(new Font("Nanum Gothic", Font.PLAIN, 16));  // 추가된 부분
         emailTextField.setBounds(140, 80, 200, 33);  // 추가된 부분
-        contentPane.add(emailTextField);  // 추가된 부분
-        emailTextField.setColumns(10);  // 추가된 부분
+        contentPane.add(emailTextField);
+        emailTextField.setColumns(10);
 
+        // 생년월일
         lblEnterNewDOB = new JLabel("생년월일 수정:");
         lblEnterNewDOB.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEnterNewDOB.setForeground(new Color(254, 255, 255));
@@ -68,6 +72,8 @@ public class ChangeInfoUI extends JFrame {
         contentPane.add(dobTextField);
         dobTextField.setColumns(10);
 
+
+        // 버튼
         JButton btnChangeInfo = new JButton("변경하기");
         btnChangeInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

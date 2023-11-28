@@ -19,7 +19,6 @@ public class FindPasswordUI extends JFrame {
     private JTextField lastnameField;
     private JTextField emailField;
     private JTextField birthdateField;
-    private JTextArea resultTextArea;
 
     public FindPasswordUI() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -157,7 +156,7 @@ public class FindPasswordUI extends JFrame {
 
 
                         } else {
-                            // Display a message if no matching record is found
+                            // 맞는 정보가 을 때
                             JOptionPane.showMessageDialog(FindPasswordUI.this, "일치하는 정보를 찾을 수 없습니다.", "비밀번호 찾기", JOptionPane.WARNING_MESSAGE);
                             setLocationRelativeTo(null);
                         }
@@ -168,7 +167,7 @@ public class FindPasswordUI extends JFrame {
                 }
             }
 
-            // Add a new method to mask half of the password with '*'
+            // 비밀번호 절반만 보여주는 함수
             private String maskHalfPassword(String password) {
                 int length = password.length();
                 int halfLength = length / 2;
@@ -180,7 +179,7 @@ public class FindPasswordUI extends JFrame {
             }
 
 
-            // Add a new method to handle password reset
+            // 비밀번호 초기화 함수
             private void resetPassword(String id, String newPassword) {
                 try {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");

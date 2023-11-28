@@ -38,11 +38,7 @@ public class RegistrationUI extends JFrame {
 
     //버튼 디자인
     public class RoundedButton extends JButton {
-        public RoundedButton() { super(); decorate(); }
         public RoundedButton(String text) { super(text); decorate(); }
-        public RoundedButton(Action action) { super(action); decorate(); }
-        public RoundedButton(Icon icon) { super(icon); decorate(); }
-        public RoundedButton(String text, Icon icon) { super(text, icon); decorate(); }
         protected void decorate() { setBorderPainted(false); setOpaque(false); }
         @Override
         protected void paintComponent(Graphics g) {
@@ -222,8 +218,8 @@ public class RegistrationUI extends JFrame {
 
 
         // 뒤로가기
-        JButton BacktoMain = new JButton("back");
-        BacktoMain.setBounds(30, 25, 70, 30);
+        JButton BacktoMain = new JButton(new ImageIcon(getClass().getResource("/img/backArrow.png")));
+        BacktoMain.setBounds(30, 25, 30, 30);
         contentPane.add(BacktoMain);
         BacktoMain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
