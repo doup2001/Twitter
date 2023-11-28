@@ -36,6 +36,11 @@ public class LoginUI extends JFrame {
     private JLabel label;
     private JPanel contentPane;
 
+    // 상수로 DB 연결 정보 정의
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "David100894@";
+
     //라운드 버튼 디자인
     public class RoundedButton extends JButton {
         public RoundedButton(String text) { super(text); decorate(); }
@@ -125,24 +130,27 @@ public class LoginUI extends JFrame {
                 String id = textField.getText();
                 String password = passwordField.getText();
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+                    // 상수로 정의한 DB 연결 정보 사용
+                    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                        // 수정된 부분: PreparedStatement를 사용하고 try-with-resources 사용
+                        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, password FROM account WHERE id=? AND password=?")) {
+                            preparedStatement.setString(1, id);
+                            preparedStatement.setString(2, password);
 
-                    PreparedStatement st = (PreparedStatement) connection
-                            .prepareStatement("Select id, password from account where id=? and password=?");
-
-                    st.setString(1, id);
-                    st.setString(2, password);
-                    ResultSet rs = st.executeQuery();
-                    if (rs.next()) {
-                        dispose();
-                        MainBoardUI main = new MainBoardUI(id);
-                        main.setTitle("Twitter");
-                        main.setVisible(true);
-                        // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
-                        JOptionPane.showMessageDialog(null, "환영합니다", "Login", JOptionPane.PLAIN_MESSAGE);
-                    } else {
-                        // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
-                        JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 틀렸습니다", "Failed to Login", JOptionPane.PLAIN_MESSAGE);
+                            try (ResultSet rs = preparedStatement.executeQuery()) {
+                                if (rs.next()) {
+                                    dispose();
+                                    MainBoardUI main = new MainBoardUI(id);
+                                    main.setTitle("Twitter");
+                                    main.setVisible(true);
+                                    // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
+                                    JOptionPane.showMessageDialog(null, "환영합니다", "Login", JOptionPane.PLAIN_MESSAGE);
+                                } else {
+                                    // 수정된 부분: 다이얼로그의 부모로 null을 사용하여 화면 중앙에 표시
+                                    JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호가 틀렸습니다", "Failed to Login", JOptionPane.PLAIN_MESSAGE);
+                                }
+                            }
+                        }
                     }
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
@@ -166,12 +174,7 @@ public class LoginUI extends JFrame {
 
         contentPane.add(RegisterButton);
 
-        // 라벨
-        label = new JLabel("");
-        label.setBackground(new Color(221, 228, 232));
-        label.setBounds(0, 0, 400, 562);
-        contentPane.add(label);
-
+        // 로고 사진
         JLabel LoginLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/loginLogo.png")).getImage();
         LoginLogo.setIcon(new ImageIcon(img));
@@ -180,6 +183,4 @@ public class LoginUI extends JFrame {
 
         setLocationRelativeTo(null);
     }
-
-
 }
