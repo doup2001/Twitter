@@ -1,5 +1,7 @@
 package MVC;
 
+import ui.DatabaseConstants;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,17 +12,17 @@ public class Controller {
     ResultSet rs = null;
     Statement st = null;
 
+    // JDBC연결
     public Controller() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit","root",
-                    "David100894@");
-
+            connect = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // 아티클 숫자 가져오기
     public Integer getArticleNextNum() {
         int articleNum = -1;
         try {
@@ -106,6 +108,7 @@ public class Controller {
         }
     }
 
+    //팔로잉 가져오기
     public ArrayList<String> getFollowing(String ID) {
         ArrayList<String> arr = new ArrayList<>();
         try {
@@ -126,6 +129,7 @@ public class Controller {
         return arr;
     }
 
+    //팔로워 가져오기
     public ArrayList<String> getFollower(String ID) {
         ArrayList<String> arr = new ArrayList<>();
         try {
@@ -146,6 +150,7 @@ public class Controller {
         return arr;
     }
 
+    // 전체 유저 검색
     public ArrayList<String> getAllUser(String myID) {
         ArrayList<String> arr = new ArrayList<>();
         System.out.println(arr);
@@ -167,6 +172,7 @@ public class Controller {
         return arr;
     }
 
+    // 팔로우 여부 탐색
     public String setFollowButton(String Myid, String userId) {
         // 팔로우가 되어 있지 않아야 팔로우라고 보여야 함
         // 팔로우 안 되어있는 상태
@@ -175,6 +181,7 @@ public class Controller {
         }
         return "unfollow";
     }
+
 
     public Boolean checkFollow(String Myid, String userId) {
         boolean result = false;

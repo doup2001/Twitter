@@ -56,6 +56,7 @@ public class MyBoardUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> followerList = controller.getFollower(ID);
                 showFollowList("내 팔로워 목록", followerList);
+
             }
         });
 
@@ -318,21 +319,23 @@ public class MyBoardUI extends JFrame {
             followerBoardButton[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
                     System.out.println(followerId + "'s Board!");
                     OtherBoardUI otherBoardUI = new OtherBoardUI(followerId, ID);
                     otherBoardUI.setVisible(true);
+
+                    // OtherBoardUI로 이동할 때 팔로워 목록 창이 자동으로 닫히도록 함
+                    followListFrame.dispose();
                 }
             });
 
             jp.add(followUserId[i]);
             jp.add(followerBoardButton[i]);
-
         }
 
         jpMain.add(jp, BorderLayout.NORTH);
         followListFrame.getContentPane().add(new JScrollPane(jpMain), BorderLayout.CENTER);
     }
+
 
 
     private void updatePostList(ArrayList<Post> arr) {

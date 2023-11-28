@@ -26,27 +26,28 @@ public class OtherBoardUI extends JFrame {
     public OtherBoardUI(String otherUserID, String userID) {
         this.otherUserID = otherUserID;
         this.userID = userID;
+        controller = new Controller();
 
-
+        //기본 사이즈
         setSize(500, 800);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
 
+        // 패널 구성
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
-
-        controller = new Controller();
-
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        // 피드 주인 표시
         JLabel userIdLabel = new JLabel(otherUserID + "님의 피드");
         userIdLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 16));
         userIdLabel.setForeground(new Color(254, 255, 255));
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
+        // 글 쓰는 곳
         writeArea = new JTextArea("");
         writeArea.setBounds(40, 170, 320, 73);
         writeArea.setBorder(BorderFactory.createCompoundBorder(
@@ -54,6 +55,7 @@ public class OtherBoardUI extends JFrame {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         contentPane.add(writeArea);
 
+        // 글 읽는 곳
         readArea = new JTextArea("read");
         readArea.setBounds(0, 400, 350, 400);
 
@@ -63,26 +65,28 @@ public class OtherBoardUI extends JFrame {
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
 
+        // 글 작성
         JButton articleWriteButton = new JButton("글 작성하기");
         articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleWriteButton.setBounds(210, 250, 100, 30);
+        articleWriteButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleWriteButton);
 
-        // articleWriteButton의 액션 이벤트 수정
         articleWriteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String article = writeArea.getText();
                 int num = controller.getArticleNextNum();
-                controller.insertPost(new Post(num, otherUserID, article)); // 여기서 userID 사용
+                controller.insertPost(new Post(num, otherUserID, article));
                 updatePostList();
             }
         });
 
-
+        // 새로고침
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleReadButton.setBounds(100, 250, 90, 30);
+        articleReadButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleReadButton);
 
         articleReadButton.addActionListener(new ActionListener() {
@@ -92,32 +96,38 @@ public class OtherBoardUI extends JFrame {
             }
         });
 
-        // Follow Button
+        // 팔로우 버튼
         JButton followButton = createFollowButton(otherUserID);
         followButton.setBounds(250, 130, 90, 30);
+        followButton.setForeground(new Color(254, 255, 255));
         contentPane.add(followButton);
 
+
+        //로고 사진
         JLabel MainLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
         MainLogo.setIcon(new ImageIcon(img));
         MainLogo.setBounds(184, 25, 30, 30);
         contentPane.add(MainLogo);
 
-        JButton BacktoMain = new JButton("back");
-        BacktoMain.setBounds(30, 25, 70, 30);
-        contentPane.add(BacktoMain);
-        BacktoMain.addActionListener(new ActionListener() {
+
+        // 뒤로가기 myhome으로
+        JButton BacktoMy = new JButton(new ImageIcon(getClass().getResource("/img/backArrow.png")));
+        BacktoMy.setBounds(30, 25, 30, 30);
+        contentPane.add(BacktoMy);
+        BacktoMy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // main으로 이동
                 dispose();
-                MainBoardUI main = new MainBoardUI(userID);
-                main.setTitle("Twitter");
-                main.setVisible(true);
+                MyBoardUI myBoardUI = new MyBoardUI(userID);
+                myBoardUI.setTitle("MyHome");
+                myBoardUI.setVisible(true);
             }
         });
 
         setLocationRelativeTo(null);
         setVisible(true); // 이 부분을 setVisible 앞으로 이동
+        updatePostList();
     }
 
     private void updatePostList() {
@@ -146,6 +156,7 @@ public class OtherBoardUI extends JFrame {
         return button;
     }
 
+    // 팔로우 활성화의 여부에 따른 글자
     private void setupFollowButton(JButton button, String userid) {
         button.addActionListener(new ActionListener() {
             @Override
@@ -162,10 +173,10 @@ public class OtherBoardUI extends JFrame {
         });
     }
 
+    // 글 시간 가져오기
     private LocalDateTime getCreatedAtFromDatabase(int num) {
         LocalDateTime createdAt = null;
-        try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+        try (Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
             PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
             st.setInt(1, num);
             ResultSet rs = st.executeQuery();
