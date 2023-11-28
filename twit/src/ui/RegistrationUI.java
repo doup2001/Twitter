@@ -9,10 +9,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,20 +18,22 @@ import java.awt.Color;
 
 public class RegistrationUI extends JFrame {
 
-
-
     private JPanel contentPane;
     private JTextField firstname;
     private JTextField lastname;
     private JTextField id;
     private JPasswordField passwordField;
-    private JButton btnNewButton1;
-    private JButton btnNewButton2;
-
+    private JButton RegisterButton;
+    private JButton findMyAccountButton;
     private JRadioButton rdbtnMale;
     private JRadioButton rdbtnFemale;
     private JTextField email;
     private JTextField birthdate;
+
+    // 상수로 DB 연결 정보 정의
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "David100894@";
 
     //버튼 디자인
     public class RoundedButton extends JButton {
@@ -63,41 +62,47 @@ public class RegistrationUI extends JFrame {
             super.paintComponent(g);
         }
     }
-
+    // 회원가입 클래스
     public RegistrationUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
         setResizable(false);
+
+        // 패널 구성
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewUserRegister = new JLabel("지금 트위터에 가입하세요");
-        lblNewUserRegister.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewUserRegister.setFont(new Font("Nanum Gothic", Font.BOLD, 20));
-        lblNewUserRegister.setForeground(new Color(221, 228, 232));
-        lblNewUserRegister.setBounds(14, 50, 373, 50);
-        contentPane.add(lblNewUserRegister);
+        // 라벨
+        JLabel UserRegister = new JLabel("지금 트위터에 가입하세요");
+        UserRegister.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel lblName = new JLabel("이름 / First Name");
-        lblName.setForeground(new Color(254, 255, 255));
-        lblName.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
-        lblName.setBounds(72, 120, 100, 27);
-        contentPane.add(lblName);
+        UserRegister.setFont(new Font("Nanum Gothic", Font.BOLD, 20));
+        UserRegister.setForeground(new Color(221, 228, 232));
+        UserRegister.setBounds(14, 50, 373, 50);
+        contentPane.add(UserRegister);
 
-        JLabel lblNewLabel = new JLabel("성 / Last Name");
-        lblNewLabel.setForeground(new Color(254, 255, 255));
-        lblNewLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
-        lblNewLabel.setBounds(72, 170, 100, 27);
-        contentPane.add(lblNewLabel);
+        // 이름
+        JLabel FirstNameLabel = new JLabel("이름 / First Name");
+        FirstNameLabel.setForeground(new Color(254, 255, 255));
+        FirstNameLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        FirstNameLabel.setBounds(72, 120, 100, 27);
+        contentPane.add(FirstNameLabel);
 
         firstname = new JTextField();
         firstname.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
         firstname.setBounds(69, 140, 262, 33);
         contentPane.add(firstname);
-        firstname.setColumns(10);
+        firstname.setColumns(10); // 최대 문자 10
+
+        // 성
+        JLabel lblNewLabel = new JLabel("성 / Last Name");
+        lblNewLabel.setForeground(new Color(254, 255, 255));
+        lblNewLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        lblNewLabel.setBounds(72, 170, 100, 27);
+        contentPane.add(lblNewLabel);
 
         lastname = new JTextField();
         lastname.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
@@ -105,18 +110,20 @@ public class RegistrationUI extends JFrame {
         contentPane.add(lastname);
         lastname.setColumns(10);
 
+        // 아이디
+        JLabel UserIdLabel = new JLabel("아이디 / ID");
+        UserIdLabel.setForeground(new Color(254, 255, 255));
+        UserIdLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        UserIdLabel.setBounds(72, 220, 78, 27);
+        contentPane.add(UserIdLabel);
+
         id = new JTextField();
         id.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
         id.setBounds(69, 240, 262, 33);
         contentPane.add(id);
         id.setColumns(10);
 
-        JLabel lblUsername = new JLabel("아이디 / ID");
-        lblUsername.setForeground(new Color(254, 255, 255));
-        lblUsername.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
-        lblUsername.setBounds(72, 220, 78, 27);
-        contentPane.add(lblUsername);
-
+        // 비밀번호
         JLabel lblPassword = new JLabel("비밀번호 / Password");
         lblPassword.setForeground(new Color(254, 255, 255));
         lblPassword.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
@@ -128,7 +135,7 @@ public class RegistrationUI extends JFrame {
         passwordField.setBounds(69, 290, 262, 33);
         contentPane.add(passwordField);
 
-// 성별 선택 라디오 버튼
+        // 성별 선택 라디오 버튼
         JLabel sexLabel = new JLabel("성별 선택");
         sexLabel.setForeground(new Color(254, 255, 255));
         sexLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
@@ -152,49 +159,54 @@ public class RegistrationUI extends JFrame {
         rdbtnFemale.setBounds(146, 345, 65, 23);
         contentPane.add(rdbtnFemale);
 
-// 이메일
-        email = new JTextField();
-        email.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
-        email.setBounds(69, 390, 262, 33);
-        contentPane.add(email);
-        email.setColumns(10);
-
+        // 이메일
         JLabel lblEmail = new JLabel("이메일 / Email");
         lblEmail.setForeground(new Color(254, 255, 255));
         lblEmail.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblEmail.setBounds(72, 370, 100, 27);
         contentPane.add(lblEmail);
 
-// 생년월일
-        birthdate = new JTextField();
-        birthdate.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
-        birthdate.setBounds(69, 440, 262, 33);
-        contentPane.add(birthdate);
-        birthdate.setColumns(10);
+        email = new JTextField();
+        email.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
+        email.setBounds(69, 390, 262, 33);
+        contentPane.add(email);
+        email.setColumns(10);
 
+        // 생년월일
         JLabel lblBirthdate = new JLabel("생년월일 / Birthdate");
         lblBirthdate.setForeground(new Color(254, 255, 255));
         lblBirthdate.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
         lblBirthdate.setBounds(72, 420, 130, 27);
         contentPane.add(lblBirthdate);
 
+        birthdate = new JTextField();
+        birthdate.setFont(new Font("Nanum Gothic", Font.PLAIN, 20));
+        birthdate.setBounds(69, 440, 262, 33);
+        contentPane.add(birthdate);
+        birthdate.setColumns(10);
+
         // 가입하기 버튼
-        btnNewButton1 = new RoundedButton("가입하기");
-        btnNewButton1.setBackground(new Color(197, 225, 255));
-        btnNewButton1.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
-        btnNewButton1.setBounds(69, 510, 262, 40);
-        contentPane.add(btnNewButton1);
+        RegisterButton = new RoundedButton("가입하기");
+        RegisterButton.setBackground(new Color(197, 225, 255));
+        RegisterButton.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
+        RegisterButton.setBounds(69, 510, 262, 40);
+        contentPane.add(RegisterButton);
 
-        // 이미 계정이 있으신가요 버튼
-        btnNewButton2 = new RoundedButton("이미 계정이 있으신가요?");
-        btnNewButton2.setBackground(new Color(197, 225, 255));
-        btnNewButton2.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
-        btnNewButton2.setBounds(69, 570, 262, 40);
-        contentPane.add(btnNewButton2);
+        // 아이디/비밀번호 찾기
+        findMyAccountButton = new RoundedButton("아이디 / 비밀번호 찾기");
+        findMyAccountButton.setBackground(new Color(197, 225, 255));
+        findMyAccountButton.setFont(new Font("Nanum Gothic", Font.BOLD, 14));
+        findMyAccountButton.setBounds(69, 570, 262, 40);
+        contentPane.add(findMyAccountButton);
 
-        btnNewButton2.addActionListener(new ActionListener() {
+        findMyAccountButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+
+                // 로그인 화면으로
+                LoginUI ul = new LoginUI();
+                ul.setTitle("Login");
+                ul.setVisible(true);
 
                 // 다이얼로그 상자를 통해 아이디 찾기 또는 비밀번호 찾기 선택 받기
                 String[] options = {"아이디 찾기", "비밀번호 찾기"};
@@ -206,6 +218,7 @@ public class RegistrationUI extends JFrame {
                     findIDUI.setTitle("Find ID");
                     findIDUI.setVisible(true);
                     findIDUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
                 } else if (choice == 1) {
                     // 비밀번호 찾기 선택 시
                     FindPasswordUI findPasswordUI = new FindPasswordUI();
@@ -215,7 +228,6 @@ public class RegistrationUI extends JFrame {
                 }
             }
         });
-
 
         // 뒤로가기
         JButton BacktoMain = new JButton(new ImageIcon(getClass().getResource("/img/backArrow.png")));
@@ -230,6 +242,7 @@ public class RegistrationUI extends JFrame {
                 main.setVisible(true);
             }
         });
+
         // 로고
         JLabel RegiLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/registrationIcon.png")).getImage();
@@ -237,7 +250,8 @@ public class RegistrationUI extends JFrame {
         RegiLogo.setBounds(175, 10, 50, 50);
         contentPane.add(RegiLogo);
 
-        btnNewButton1.addActionListener(new ActionListener() {
+        // 회원가입하기
+        RegisterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String firstName = firstname.getText();
                 String lastName = lastname.getText();
@@ -256,45 +270,57 @@ public class RegistrationUI extends JFrame {
                 msg += " \n";
 
                 if (firstName_len == 0) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "이름을 입력해주세요.", "Invalid First Name", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterButton, "이름을 입력해주세요.", "Invalid First Name", JOptionPane.PLAIN_MESSAGE);
                 } else if (lastName_len == 0) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "성(Last Name)을 입력해주세요.", "Invalid Last Name", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterButton, "성(Last Name)을 입력해주세요.", "Invalid Last Name", JOptionPane.PLAIN_MESSAGE);
                 } else if (ID_len < 5) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "아이디는 최소 5글자 이상이어야 합니다.", "Invalid Username", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterButton, "아이디는 최소 5글자 이상이어야 합니다.", "Invalid Username", JOptionPane.PLAIN_MESSAGE);
                 } else if (password_len < 5) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "비밀번호는 최소 5글자 이상이어야 합니다.", "Invalid Password", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterButton, "비밀번호는 최소 5글자 이상이어야 합니다.", "Invalid Password", JOptionPane.PLAIN_MESSAGE);
                 } else if (!userEmail.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "올바른 이메일 양식을 입력해주세요.", "Invalid Email", JOptionPane.PLAIN_MESSAGE);
-                // 생년월일 형식 검증
+                    JOptionPane.showMessageDialog(RegisterButton, "올바른 이메일 양식을 입력해주세요.", "Invalid Email", JOptionPane.PLAIN_MESSAGE);
+                    // 생년월일 형식 검증
                 } else if (!userBirthdate.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
-                    JOptionPane.showMessageDialog(btnNewButton1, "올바른 생년월일 양식을 입력해주세요. (올바른 양식 : HHHH - MM -DD)", "Invalid Birthdate", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterButton, "올바른 생년월일 양식을 입력해주세요. (올바른 양식 : HHHH - MM -DD)", "Invalid Birthdate", JOptionPane.PLAIN_MESSAGE);
                 } else {
                     try {
-                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+                        // 상수로 정의한 DB 연결 정보 사용
+                        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
 
-                        // 이미 존재하는 계정인지 확인
-                        String checkQuery = "SELECT * FROM account WHERE id = '" + ID + "'";
-                        try (Statement checkStatement = connection.createStatement();
-                             ResultSet resultSet = checkStatement.executeQuery(checkQuery)) {
-                            if (resultSet.next()) {
-                                JOptionPane.showMessageDialog(btnNewButton1, "이미 존재하는 계정입니다.");
-                            } else {
-                                // 계정 추가
-                                String insertQuery = "INSERT INTO account (firstname, lastname, id, password, birthdate, email, gender) VALUES ('" + firstName + "','" + lastName + "','" + ID + "','" + password + "','" + userBirthdate + "','" + userEmail + "','" + gender + "');";
-                                try (Statement sta = connection.createStatement()) {
-                                    int x = sta.executeUpdate(insertQuery);
+                            // 이미 존재하는 계정인지 확인
+                            String checkQuery = "SELECT * FROM account WHERE id = ?";
+                            try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+                                checkStatement.setString(1, ID);
 
-                                    if (x > 0) {
-                                        JOptionPane.showMessageDialog(btnNewButton1, "반갑습니다, " + msg + "계정이 성공적으로 생성되었습니다.");
-                                        dispose();
-                                        LoginUI ul = new LoginUI();
-                                        ul.setTitle("Login");
-                                        ul.setVisible(true);
+                                try (ResultSet resultSet = checkStatement.executeQuery()) {
+                                    if (resultSet.next()) {
+                                        JOptionPane.showMessageDialog(RegisterButton, "이미 존재하는 계정입니다.");
+                                    } else {
+                                        // 계정 추가
+                                        String insertQuery = "INSERT INTO account (firstname, lastname, id, password, birthdate, email, gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                                        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                                            insertStatement.setString(1, firstName);
+                                            insertStatement.setString(2, lastName);
+                                            insertStatement.setString(3, ID);
+                                            insertStatement.setString(4, password);
+                                            insertStatement.setString(5, userBirthdate);
+                                            insertStatement.setString(6, userEmail);
+                                            insertStatement.setString(7, gender);
+
+                                            int x = insertStatement.executeUpdate();
+
+                                            if (x > 0) {
+                                                JOptionPane.showMessageDialog(RegisterButton, "반갑습니다, " + msg + "계정이 성공적으로 생성되었습니다.");
+                                                dispose();
+                                                LoginUI ul = new LoginUI();
+                                                ul.setTitle("Login");
+                                                ul.setVisible(true);
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                        connection.close();
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
@@ -302,19 +328,7 @@ public class RegistrationUI extends JFrame {
             }
         });
 
-        btnNewButton2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                LoginUI ul = new LoginUI();
-                ul.setTitle("Login");
-                ul.setVisible(true);
-            }
-        });
-
-        contentPane.add(btnNewButton2);
-
         setLocationRelativeTo(null);
         setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
-
 }
