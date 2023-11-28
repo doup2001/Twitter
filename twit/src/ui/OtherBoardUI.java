@@ -119,9 +119,9 @@ public class OtherBoardUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // main으로 이동
                 dispose();
-                MyBoardUI myBoardUI = new MyBoardUI(userID);
-                myBoardUI.setTitle("MyHome");
-                myBoardUI.setVisible(true);
+                MainBoardUI mainBoardUI = new MainBoardUI(userID);
+                mainBoardUI.setTitle("MyHome");
+                mainBoardUI.setVisible(true);
             }
         });
 
