@@ -79,10 +79,10 @@ public class ChangeInfoUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String newPassword = passwordTextField.getText();
                 String newDOB = dobTextField.getText();
-                String newEmail = emailTextField.getText();  // 추가된 부분
+                String newEmail = emailTextField.getText();
 
                 try {
-                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+                    Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
 
                     // 비밀번호 변경
                     if (!newPassword.isEmpty()) {

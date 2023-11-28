@@ -74,9 +74,4 @@ public class SearchUI extends JFrame {
         OtherBoardUI otherBoardUI = new OtherBoardUI(userId, myUserID); // 내 userID 전달
         otherBoardUI.setVisible(true);
     }
-
-    public static void main(String[] args) {
-        // 예시로 SearchUI를 사용할 때 내 userID를 전달하여 객체 생성
-        SwingUtilities.invokeLater(() -> new SearchUI("내UserID"));
-    }
 }

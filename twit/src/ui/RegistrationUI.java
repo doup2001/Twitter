@@ -30,11 +30,6 @@ public class RegistrationUI extends JFrame {
     private JTextField email;
     private JTextField birthdate;
 
-    // 상수로 DB 연결 정보 정의
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "David100894@";
-
     //버튼 디자인
     public class RoundedButton extends JButton {
         public RoundedButton(String text) { super(text); decorate(); }
@@ -285,7 +280,7 @@ public class RegistrationUI extends JFrame {
                 } else {
                     try {
                         // 상수로 정의한 DB 연결 정보 사용
-                        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                        try (Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
 
                             // 이미 존재하는 계정인지 확인
                             String checkQuery = "SELECT * FROM account WHERE id = ?";

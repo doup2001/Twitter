@@ -19,11 +19,6 @@ public class FindIDUI extends JFrame {
     private JTextField emailField;
     private JTextField birthdateField;
 
-    // 상수로 DB 연결 정보 정의
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "David100894@";
-
     public FindIDUI() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(500, 80, 400, 450);
@@ -110,7 +105,7 @@ public class FindIDUI extends JFrame {
 
                 try {
                     // 상수로 정의한 DB 연결 정보 사용
-                    Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                    Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
 
                     String query = "SELECT id FROM account WHERE firstname=? AND lastname=? AND email=? AND birthdate=?";
                     try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {

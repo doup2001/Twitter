@@ -33,13 +33,7 @@ public class LoginUI extends JFrame {
     private JPasswordField passwordField;
     private JButton LoginButton;
     private JButton RegisterButton;
-    private JLabel label;
     private JPanel contentPane;
-
-    // 상수로 DB 연결 정보 정의
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "David100894@";
 
     //라운드 버튼 디자인
     public class RoundedButton extends JButton {
@@ -131,7 +125,7 @@ public class LoginUI extends JFrame {
                 String password = passwordField.getText();
                 try {
                     // 상수로 정의한 DB 연결 정보 사용
-                    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                    try (Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
                         // 수정된 부분: PreparedStatement를 사용하고 try-with-resources 사용
                         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, password FROM account WHERE id=? AND password=?")) {
                             preparedStatement.setString(1, id);

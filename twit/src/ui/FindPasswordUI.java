@@ -20,11 +20,6 @@ public class FindPasswordUI extends JFrame {
     private JTextField emailField;
     private JTextField birthdateField;
 
-    // 상수로 정의된 DB 연결 정보
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "David100894@";
-
     private static final String SELECT_PASSWORD_QUERY = "SELECT password FROM account WHERE id=? AND firstname=? AND lastname=? AND email=? AND birthdate=?";
     private static final String UPDATE_PASSWORD_QUERY = "UPDATE account SET password=? WHERE id=?";
 
@@ -131,7 +126,7 @@ public class FindPasswordUI extends JFrame {
                 String birthdate = birthdateField.getText();
 
                 try {
-                    Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                    Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
 
                     try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PASSWORD_QUERY)) {
                         preparedStatement.setString(1, id);
@@ -191,7 +186,7 @@ public class FindPasswordUI extends JFrame {
 
     private void resetPassword(String id, String newPassword) {
         try {
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
 
             try (PreparedStatement updateStatement = connection.prepareStatement(UPDATE_PASSWORD_QUERY)) {
                 updateStatement.setString(1, newPassword);

@@ -23,11 +23,6 @@ public class MainBoardUI extends JFrame {
     private final JButton MyHomeBoard;
     private final JButton searchButton;
 
-    // DB 연결 정보 상수화
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "David100894@";
-
     public MainBoardUI(String ID) {
         this.ID = ID;
         Controller controller = new Controller();
@@ -168,7 +163,7 @@ public class MainBoardUI extends JFrame {
     // num을 이용하여 데이터베이스에서 시간 정보를 가져오는 메서드
     private LocalDateTime getCreatedAtFromDatabase(int num) {
         LocalDateTime createdAt = null;
-        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+        try (Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
             PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
             st.setInt(1, num);
             ResultSet rs = st.executeQuery();

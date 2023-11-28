@@ -62,7 +62,4 @@ public class AllUserUI extends JFrame {
         otherBoardUI.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AllUserUI("exampleUser"));
-    }
 }
