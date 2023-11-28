@@ -16,13 +16,17 @@ public class MainBoardUI extends JFrame {
 
     String ID;
     private JPanel contentPane;
-    private DefaultListModel listModel;
     private JList list;
     private JButton articleReadButton;
-    private final JButton lowBarFollowingBoardButton;
-    private final JButton lowBarAllUserButton;
-    private final JButton lowBarHisBoard;
-    private final JButton searchButton;  // 추가된 부분
+    private final JButton MainBoardButton;
+    private final JButton AllUserButton;
+    private final JButton MyHomeBoard;
+    private final JButton searchButton;
+
+    // DB 연결 정보 상수화
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/twit";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "David100894@";
 
     public MainBoardUI(String ID) {
         this.ID = ID;
@@ -31,34 +35,21 @@ public class MainBoardUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
 
+        // 패널 구성
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(0, 0, 0)); // 하늘색 배경
+        contentPane.setBackground(new Color(0, 0, 0));
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        // 글 읽는 부분
         list = new JList();
         list.setBounds(40, 200, 320, 400);
         list.setBackground(new Color(20, 20, 20));
         list.setForeground(new Color(254, 255, 255));
         contentPane.add(list);
 
-        articleReadButton = new JButton(new ImageIcon(getClass().getResource("/img/refreshPage.png")));
-        articleReadButton.setBounds(310, 120, 30, 30);
-        contentPane.add(articleReadButton);
-
-        searchButton = new JButton("Search");  // 추가된 부분
-        searchButton.setBounds(200, 620, 80, 40);  // 추가된 부분
-        searchButton.setForeground(new Color(254, 255, 255));
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Search 버튼을 누를 때 SearchUI를 생성하여 표시
-                SearchUI searchUI = new SearchUI(ID);
-                searchUI.setVisible(true);
-            }
-        });
-
+        // 타인의 글 읽어오기
         ArrayList<Post> arr = controller.readPost(ID);
         ArrayList<String> followArr = controller.getFollowing(ID);
         for (String s : followArr) {
@@ -69,6 +60,10 @@ public class MainBoardUI extends JFrame {
 
         createListModel(arr);
 
+        // 새로고침
+        articleReadButton = new JButton(new ImageIcon(getClass().getResource("/img/refreshPage.png")));
+        articleReadButton.setBounds(310, 120, 30, 30);
+        contentPane.add(articleReadButton);
         articleReadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,20 +79,38 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        lowBarFollowingBoardButton = new JButton("MainBoard");
-        lowBarFollowingBoardButton.setBounds(30, 620, 80, 40);
-        lowBarFollowingBoardButton.setForeground(new Color(254, 255, 255));
-        lowBarFollowingBoardButton.addActionListener(new ActionListener() {
+        // 검색하기
+        searchButton = new JButton("Search");  // 추가된 부분
+        searchButton.setBounds(200, 620, 80, 40);  // 추가된 부분
+        searchButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(searchButton);  // 추가된 부분
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Search 버튼을 누를 때 SearchUI를 생성하여 표시
+                SearchUI searchUI = new SearchUI(ID);
+                searchUI.setVisible(true);
+            }
+        });
+
+        // 메인보드
+        MainBoardButton = new JButton("MainBoard");
+        MainBoardButton.setBounds(30, 620, 80, 40);
+        MainBoardButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(MainBoardButton);
+        MainBoardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("MainBoard!");
             }
         });
 
-        lowBarAllUserButton = new JButton("All User");
-        lowBarAllUserButton.setBounds(115, 620, 80, 40);
-        lowBarAllUserButton.setForeground(new Color(254, 255, 255));
-        lowBarAllUserButton.addActionListener(new ActionListener() {
+        // 전체유저 파악
+        AllUserButton = new JButton("All User");
+        AllUserButton.setBounds(115, 620, 80, 40);
+        AllUserButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(AllUserButton);
+        AllUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("AllUser!");
@@ -106,10 +119,12 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        lowBarHisBoard = new JButton("MY Home");
-        lowBarHisBoard.setBounds(290, 620, 80, 40); // 우측 아래로 이동
-        lowBarHisBoard.setForeground(new Color(254, 255, 255));
-        lowBarHisBoard.addActionListener(new ActionListener() {
+        // 마이 홈
+        MyHomeBoard = new JButton("MY Home");
+        MyHomeBoard.setBounds(290, 620, 80, 40); // 우측 아래로 이동
+        MyHomeBoard.setForeground(new Color(254, 255, 255));
+        contentPane.add(MyHomeBoard);
+        MyHomeBoard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -119,11 +134,7 @@ public class MainBoardUI extends JFrame {
             }
         });
 
-        contentPane.add(lowBarFollowingBoardButton);
-        contentPane.add(lowBarAllUserButton);
-        contentPane.add(lowBarHisBoard);
-        contentPane.add(searchButton);  // 추가된 부분
-
+        // 로고 사진
         ImageIcon mainLogoIcon = new ImageIcon(getClass().getResource("/img/mainLogo.png"));
         JLabel mainLogo = new JLabel(mainLogoIcon);
         mainLogo.setBounds(184, 25, mainLogoIcon.getIconWidth(), mainLogoIcon.getIconHeight());
@@ -157,8 +168,7 @@ public class MainBoardUI extends JFrame {
     // num을 이용하여 데이터베이스에서 시간 정보를 가져오는 메서드
     private LocalDateTime getCreatedAtFromDatabase(int num) {
         LocalDateTime createdAt = null;
-        try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/twit", "root", "David100894@");
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             PreparedStatement st = con.prepareStatement("SELECT createdAt FROM article WHERE num = ?");
             st.setInt(1, num);
             ResultSet rs = st.executeQuery();
