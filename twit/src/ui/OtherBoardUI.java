@@ -2,24 +2,38 @@ package ui;
 
 import MVC.Controller;
 import MVC.Post;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class OtherBoardUI extends JFrame {
 
-    String otherUserID;
-    String userID;
+    private String otherUserID;
+    private String userID;
     private JPanel contentPane;
     private DefaultListModel listModel;
     private JList list;
-
+    private JLabel nameLabel;
+    private JLabel emailLabel;
+    private JLabel genderLabel;
 
     private Controller controller;
 
@@ -28,32 +42,46 @@ public class OtherBoardUI extends JFrame {
         this.userID = userID;
         controller = new Controller();
 
-        //기본 사이즈
         setSize(500, 800);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 80, 400, 710);
 
-        // 패널 구성
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 0, 0));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        // 피드 주인 표시
         JLabel userIdLabel = new JLabel(otherUserID + "님의 피드");
         userIdLabel.setFont(new Font("Nanum Gothic", Font.BOLD, 16));
         userIdLabel.setForeground(new Color(254, 255, 255));
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
+        nameLabel = new JLabel("이름: ");
+        nameLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        nameLabel.setForeground(new Color(254, 255, 255));
+        nameLabel.setBounds(40, 170, 320, 20);
+        contentPane.add(nameLabel);
+
+        emailLabel = new JLabel("이메일: ");
+        emailLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        emailLabel.setForeground(new Color(254, 255, 255));
+        emailLabel.setBounds(40, 190, 320, 20);
+        contentPane.add(emailLabel);
+
+        genderLabel = new JLabel("성별: ");
+        genderLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        genderLabel.setForeground(new Color(254, 255, 255));
+        genderLabel.setBounds(40, 210, 320, 20);
+        contentPane.add(genderLabel);
+
         list = new JList();
-        list.setBounds(40, 200, 320, 400);
+        list.setBounds(40, 250, 320, 350);
         list.setForeground(new Color(254, 255, 255));
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
 
-        // 댓글 작성
         JButton commentWriteButton = new JButton("댓글 작성하기");
         commentWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         commentWriteButton.setBounds(145, 630, 100, 30);
@@ -67,7 +95,6 @@ public class OtherBoardUI extends JFrame {
             }
         });
 
-        // 댓글 보기
         JButton commentReadButton = new JButton("댓글 보기");
         commentReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         commentReadButton.setBounds(240, 630, 100, 30);
@@ -81,8 +108,6 @@ public class OtherBoardUI extends JFrame {
             }
         });
 
-
-        // 새로고침
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
         articleReadButton.setBounds(60, 630, 90, 30);
@@ -96,28 +121,22 @@ public class OtherBoardUI extends JFrame {
             }
         });
 
-        // 팔로우 버튼
         JButton followButton = createFollowButton(otherUserID);
         followButton.setBounds(275, 130, 90, 30);
         followButton.setForeground(new Color(254, 255, 255));
         contentPane.add(followButton);
 
-
-        //로고 사진
         JLabel MainLogo = new JLabel("");
         Image img = new ImageIcon(this.getClass().getResource("/img/mainLogo.png")).getImage();
         MainLogo.setIcon(new ImageIcon(img));
         MainLogo.setBounds(184, 25, 30, 30);
         contentPane.add(MainLogo);
 
-
-        // 뒤로가기 myhome으로
         JButton BacktoMy = new JButton(new ImageIcon(getClass().getResource("/img/backArrow.png")));
         BacktoMy.setBounds(30, 25, 30, 30);
         contentPane.add(BacktoMy);
         BacktoMy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // main으로 이동
                 dispose();
                 MainBoardUI mainBoardUI = new MainBoardUI(userID);
                 mainBoardUI.setTitle("MyHome");
@@ -126,7 +145,8 @@ public class OtherBoardUI extends JFrame {
         });
 
         setLocationRelativeTo(null);
-        setVisible(true); // 이 부분을 setVisible 앞으로 이동
+        setVisible(true);
+        displayUserInfo();
         updatePostList();
     }
 
@@ -143,7 +163,7 @@ public class OtherBoardUI extends JFrame {
             for (Post res : arr) {
                 LocalDateTime createdAt = getCreatedAtFromDatabase(res.getNum());
                 String formattedTime = createdAt.format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
-                String post = res.getNum() + " " +"(" + res.getId() + ") " + formattedTime + " ] " + res.getArticle() + "\n";
+                String post = res.getNum() + " " + "(" + res.getId() + ") " + formattedTime + " ] " + res.getArticle() + "\n";
                 listModel.addElement(post);
             }
         }
@@ -156,7 +176,6 @@ public class OtherBoardUI extends JFrame {
         return button;
     }
 
-    // 팔로우 활성화의 여부에 따른 글자
     private void setupFollowButton(JButton button, String userid) {
         button.addActionListener(new ActionListener() {
             @Override
@@ -173,7 +192,6 @@ public class OtherBoardUI extends JFrame {
         });
     }
 
-    // 글 시간 가져오기
     private LocalDateTime getCreatedAtFromDatabase(int num) {
         LocalDateTime createdAt = null;
         try (Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
@@ -190,24 +208,51 @@ public class OtherBoardUI extends JFrame {
         return createdAt;
     }
 
+    private void displayUserInfo() {
+        try {
+            UserInfo userInfo = getUserInfo(otherUserID);
+
+            nameLabel.setText("이름: " + userInfo.getFirstname() + " " + userInfo.getLastname());
+            emailLabel.setText("이메일: " + userInfo.getEmail());
+            genderLabel.setText("성별: " + userInfo.getGender());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private UserInfo getUserInfo(String userID) throws SQLException {
+        UserInfo userInfo = null;
+
+        String query = "SELECT firstname, lastname, email, gender FROM account WHERE id = ?";
+
+        try (Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
+             PreparedStatement st = con.prepareStatement(query)) {
+
+            st.setString(1, userID);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                userInfo = new UserInfo(rs);
+            }
+        }
+
+        return userInfo;
+    }
+
     private void writeComment() {
         String postText = (String) list.getSelectedValue();
         if (postText != null && !postText.isEmpty()) {
             String[] strArr = postText.split(" ");
             int articleNum = Integer.parseInt(String.valueOf(strArr[0]));
 
-            // 변경: 댓글 입력 다이얼로그 표시
             String commentText = JOptionPane.showInputDialog(this, "댓글을 입력하세요:");
 
             if (commentText != null && !commentText.isEmpty()) {
-                // 댓글 작성 로직 구현
                 controller.writeComment(userID, otherUserID, articleNum, commentText);
-                // 댓글 작성 후 목록 업데이트
                 updatePostList();
             }
         }
     }
-
 
     private void readComments() {
         String postText = (String) list.getSelectedValue();
@@ -215,7 +260,6 @@ public class OtherBoardUI extends JFrame {
             String[] strArr = postText.split(" ");
             int articleNum = Integer.parseInt(String.valueOf(strArr[0]));
 
-            // 댓글 조회 및 표시 로직 구현
             ArrayList<String> comments = controller.readComments(articleNum);
             if (!comments.isEmpty()) {
                 StringBuilder commentText = new StringBuilder("댓글 목록:\n");
