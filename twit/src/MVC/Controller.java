@@ -4,6 +4,7 @@ import ui.DatabaseConstants;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -283,5 +284,43 @@ public class Controller {
     public ArrayList<Post> listSort(ArrayList<Post> list) {
         list.sort(new PostNumComparator());
         return list;
+    }
+
+    // 게시물에 댓글 작성
+    public void writeComment(String fromUserID, String toUserID, int articleNum, String commentText) {
+        try {
+            LocalDateTime currentTime = LocalDateTime.now();
+            PreparedStatement st = connect.prepareStatement("INSERT INTO comment (articleNum, fromUserID, toUserID, message, createdAt) VALUES (?, ?, ?, ?, ?)");
+            st.setInt(1, articleNum);
+            st.setString(2, fromUserID);
+            st.setString(3, toUserID);
+            st.setString(4, commentText);
+            st.setTimestamp(5, Timestamp.valueOf(currentTime));
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 게시물의 댓글 조회
+    public ArrayList<String> readComments(int articleNum) {
+        ArrayList<String> comments = new ArrayList<>();
+        try {
+            PreparedStatement st = connect.prepareStatement("SELECT fromUserID, message, createdAt FROM comment WHERE articleNum = ?");
+            st.setInt(1, articleNum);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                String fromUserID = rs.getString("fromUserID");
+                String message = rs.getString("message");
+                LocalDateTime createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
+                String formattedTime = createdAt.format(DateTimeFormatter.ofPattern("yy/MM/dd HH:mm"));
+                String comment = "[" + formattedTime + "] " + fromUserID + ": " + message;
+                comments.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return comments;
     }
 }

@@ -28,14 +28,15 @@ CREATE TABLE article (
     FOREIGN KEY(ID) REFERENCES account(id)
 );
 
-CREATE TABLE like_post (
-    post_num INT,
-    liker_id VARCHAR(20),
-    PRIMARY KEY(post_num, liker_id),
-    FOREIGN KEY(post_num) REFERENCES article(num),
-    FOREIGN KEY(liker_id) REFERENCES account(id)
+CREATE TABLE comment (
+    commentID INT AUTO_INCREMENT,
+    articleNum INT,
+    fromUserID VARCHAR(20),
+    toUserID VARCHAR(20),
+    message TEXT,
+    createdAt TIMESTAMP,
+    PRIMARY KEY(commentID),
+    FOREIGN KEY(articleNum) REFERENCES article(num),
+    FOREIGN KEY(fromuserID) REFERENCES account(id),
+    FOREIGN KEY(touserID) REFERENCES account(id)
 );
-
-select * from article;
-select * from follow;
-select * from account;

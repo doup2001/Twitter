@@ -61,27 +61,39 @@ public class OtherBoardUI extends JFrame {
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
 
-        // 글 작성
-        JButton articleWriteButton = new JButton("글 작성하기");
-        articleWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleWriteButton.setBounds(210, 250, 100, 30);
-        articleWriteButton.setForeground(new Color(254, 255, 255));
-        contentPane.add(articleWriteButton);
+        // 댓글 작성
+        JButton commentWriteButton = new JButton("댓글 작성하기");
+        commentWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        commentWriteButton.setBounds(145, 250, 100, 30);
+        commentWriteButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(commentWriteButton);
 
-        articleWriteButton.addActionListener(new ActionListener() {
+        commentWriteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String article = writeArea.getText();
-                int num = controller.getArticleNextNum();
-                controller.insertPost(new Post(num, otherUserID, article));
-                updatePostList();
+                writeComment();
             }
         });
+
+        // 댓글 보기
+        JButton commentReadButton = new JButton("댓글 보기");
+        commentReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        commentReadButton.setBounds(240, 250, 100, 30);
+        commentReadButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(commentReadButton);
+
+        commentReadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                readComments();
+            }
+        });
+
 
         // 새로고침
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleReadButton.setBounds(100, 250, 90, 30);
+        articleReadButton.setBounds(60, 250, 90, 30);
         articleReadButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleReadButton);
 
@@ -184,5 +196,43 @@ public class OtherBoardUI extends JFrame {
             e.printStackTrace();
         }
         return createdAt;
+    }
+
+    private void writeComment() {
+        String postText = (String) list.getSelectedValue();
+        if (postText != null && !postText.isEmpty()) {
+            String[] strArr = postText.split(" ");
+            int articleNum = Integer.parseInt(String.valueOf(strArr[0]));
+
+            String commentText = writeArea.getText();
+            if (!commentText.isEmpty()) {
+                // 댓글 작성 로직 구현
+                controller.writeComment(userID, otherUserID, articleNum, commentText);
+                // 댓글 작성 후 목록 업데이트
+                updatePostList();
+                // 댓글 작성 후 입력 영역 초기화
+                writeArea.setText("");
+            }
+        }
+    }
+
+    private void readComments() {
+        String postText = (String) list.getSelectedValue();
+        if (postText != null && !postText.isEmpty()) {
+            String[] strArr = postText.split(" ");
+            int articleNum = Integer.parseInt(String.valueOf(strArr[0]));
+
+            // 댓글 조회 및 표시 로직 구현
+            ArrayList<String> comments = controller.readComments(articleNum);
+            if (!comments.isEmpty()) {
+                StringBuilder commentText = new StringBuilder("댓글 목록:\n");
+                for (String comment : comments) {
+                    commentText.append(comment).append("\n");
+                }
+                JOptionPane.showMessageDialog(this, commentText.toString(), "댓글 목록", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "댓글이 없습니다.", "댓글 목록", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 }
