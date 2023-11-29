@@ -272,8 +272,6 @@ public class Controller {
         return result;
     }
 
-
-
     class PostNumComparator implements Comparator<Post> {
         @Override
         public int compare(Post o1, Post o2) {
@@ -301,6 +299,8 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
+
 
     // 게시물의 댓글 조회
     public ArrayList<String> readComments(int articleNum) {

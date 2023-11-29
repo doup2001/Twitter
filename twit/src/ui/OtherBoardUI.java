@@ -19,7 +19,7 @@ public class OtherBoardUI extends JFrame {
     private JPanel contentPane;
     private DefaultListModel listModel;
     private JList list;
-    private JTextArea writeArea;
+
 
     private Controller controller;
 
@@ -47,16 +47,8 @@ public class OtherBoardUI extends JFrame {
         userIdLabel.setBounds(40, 130, 200, 30);
         contentPane.add(userIdLabel);
 
-        // 글 쓰는 곳
-        writeArea = new JTextArea("");
-        writeArea.setBounds(40, 170, 320, 73);
-        writeArea.setBorder(BorderFactory.createCompoundBorder(
-                writeArea.getBorder(),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-        contentPane.add(writeArea);
-
         list = new JList();
-        list.setBounds(40, 300, 320, 300);
+        list.setBounds(40, 200, 320, 400);
         list.setForeground(new Color(254, 255, 255));
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
@@ -64,7 +56,7 @@ public class OtherBoardUI extends JFrame {
         // 댓글 작성
         JButton commentWriteButton = new JButton("댓글 작성하기");
         commentWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        commentWriteButton.setBounds(145, 250, 100, 30);
+        commentWriteButton.setBounds(145, 630, 100, 30);
         commentWriteButton.setForeground(new Color(254, 255, 255));
         contentPane.add(commentWriteButton);
 
@@ -78,7 +70,7 @@ public class OtherBoardUI extends JFrame {
         // 댓글 보기
         JButton commentReadButton = new JButton("댓글 보기");
         commentReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        commentReadButton.setBounds(240, 250, 100, 30);
+        commentReadButton.setBounds(240, 630, 100, 30);
         commentReadButton.setForeground(new Color(254, 255, 255));
         contentPane.add(commentReadButton);
 
@@ -93,7 +85,7 @@ public class OtherBoardUI extends JFrame {
         // 새로고침
         JButton articleReadButton = new JButton("새로고침");
         articleReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleReadButton.setBounds(60, 250, 90, 30);
+        articleReadButton.setBounds(60, 630, 90, 30);
         articleReadButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleReadButton);
 
@@ -204,17 +196,18 @@ public class OtherBoardUI extends JFrame {
             String[] strArr = postText.split(" ");
             int articleNum = Integer.parseInt(String.valueOf(strArr[0]));
 
-            String commentText = writeArea.getText();
-            if (!commentText.isEmpty()) {
+            // 변경: 댓글 입력 다이얼로그 표시
+            String commentText = JOptionPane.showInputDialog(this, "댓글을 입력하세요:");
+
+            if (commentText != null && !commentText.isEmpty()) {
                 // 댓글 작성 로직 구현
                 controller.writeComment(userID, otherUserID, articleNum, commentText);
                 // 댓글 작성 후 목록 업데이트
                 updatePostList();
-                // 댓글 작성 후 입력 영역 초기화
-                writeArea.setText("");
             }
         }
     }
+
 
     private void readComments() {
         String postText = (String) list.getSelectedValue();

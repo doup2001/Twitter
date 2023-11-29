@@ -204,7 +204,7 @@ public class MyBoardUI extends JFrame {
         // 글 삭제
         JButton articleDeleteButton = new JButton("글 삭제하기");
         articleDeleteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleDeleteButton.setBounds(90, 630, 100, 30);
+        articleDeleteButton.setBounds(30, 630, 90, 30);
         articleDeleteButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleDeleteButton);
 
@@ -237,7 +237,7 @@ public class MyBoardUI extends JFrame {
         // 글 수정
         JButton articleUpdateButton = new JButton("글 수정하기");
         articleUpdateButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
-        articleUpdateButton.setBounds(210, 630, 100, 30);
+        articleUpdateButton.setBounds(110, 630, 90, 30);
         articleUpdateButton.setForeground(new Color(254, 255, 255));
         contentPane.add(articleUpdateButton);
 
@@ -247,6 +247,33 @@ public class MyBoardUI extends JFrame {
                 ChangeArticleUI changePostUI = new ChangeArticleUI(articleNum);
                 changePostUI.setTitle("Change Post");
                 changePostUI.setVisible(true);
+            }
+        });
+
+        // 댓글 보기
+        JButton commentReadButton = new JButton("댓글 보기");
+        commentReadButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        commentReadButton.setBounds(190, 630, 90, 30);
+        commentReadButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(commentReadButton);
+
+        commentReadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                readComments();
+            }
+        });
+
+        // 댓글 달기
+        JButton commentWriteButton = new JButton("댓글 달기");
+        commentWriteButton.setFont(new Font("Nanum Gothic", Font.BOLD, 12));
+        commentWriteButton.setBounds(270, 630, 90, 30);  // 위치를 수정했습니다.
+        commentWriteButton.setForeground(new Color(254, 255, 255));
+        contentPane.add(commentWriteButton);
+        commentWriteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                writeComments();
             }
         });
 
@@ -275,6 +302,52 @@ public class MyBoardUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true); // 이 부분을 setVisible 앞으로 이동
     }
+
+    // MyBoardUI 클래스에 다음 메서드를 추가합니다.
+    private void readComments() {
+        String postText = (String) list.getSelectedValue();
+        if (postText != null && !postText.isEmpty()) {
+            String[] strArr = postText.split(" ");
+            int articleNum = Integer.parseInt(strArr[0]);
+
+            // 댓글 조회 및 표시 로직 구현
+            ArrayList<String> comments = controller.readComments(articleNum);
+            if (!comments.isEmpty()) {
+                StringBuilder commentText = new StringBuilder("댓글 목록:\n");
+                for (String comment : comments) {
+                    commentText.append(comment).append("\n");
+                }
+                JOptionPane.showMessageDialog(this, commentText.toString(), "댓글 목록", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "댓글이 없습니다.", "댓글 목록", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private void writeComments() {
+        String postText = (String) list.getSelectedValue();
+        if (postText != null && !postText.isEmpty()) {
+            String[] strArr = postText.split(" ");
+            int articleNum = Integer.parseInt(strArr[0]);
+
+            String commentText = JOptionPane.showInputDialog(this, "댓글을 입력하세요:");
+            if (commentText != null && !commentText.isEmpty()) {
+                // 댓글 작성 로직 구현
+                controller.writeComment(ID, ID, articleNum, commentText);
+
+                // 댓글 작성 후 목록 업데이트
+                ArrayList<Post> arr = controller.readPost(ID);
+                arr = controller.listSort(arr);
+                updatePostList(arr);
+
+                // 댓글 작성 후 입력 영역 초기화
+                writeArea.setText("");
+            }
+        }
+    }
+
+
+
 
     private boolean isOldPasswordCorrect(String inputPassword) {
         try (Connection connection = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD)) {
