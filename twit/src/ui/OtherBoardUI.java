@@ -20,7 +20,7 @@ public class OtherBoardUI extends JFrame {
     private DefaultListModel listModel;
     private JList list;
     private JTextArea writeArea;
-    private JTextArea readArea;
+
     private Controller controller;
 
     public OtherBoardUI(String otherUserID, String userID) {
@@ -54,10 +54,6 @@ public class OtherBoardUI extends JFrame {
                 writeArea.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         contentPane.add(writeArea);
-
-        // 글 읽는 곳
-        readArea = new JTextArea("read");
-        readArea.setBounds(0, 400, 350, 400);
 
         list = new JList();
         list.setBounds(40, 300, 320, 300);
@@ -98,7 +94,7 @@ public class OtherBoardUI extends JFrame {
 
         // 팔로우 버튼
         JButton followButton = createFollowButton(otherUserID);
-        followButton.setBounds(250, 130, 90, 30);
+        followButton.setBounds(275, 130, 90, 30);
         followButton.setForeground(new Color(254, 255, 255));
         contentPane.add(followButton);
 

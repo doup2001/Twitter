@@ -5,10 +5,10 @@ CREATE TABLE account (
     firstname VARCHAR(255),
     lastname VARCHAR(255),
     id VARCHAR(20) PRIMARY KEY,
-    password VARCHAR(255)
+    password VARCHAR(255),
     birthdate DATE,
     email VARCHAR(255),
-    gender VARCHAR(10);
+    gender VARCHAR(10)
 );
 
 CREATE TABLE follow (

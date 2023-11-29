@@ -17,7 +17,7 @@ public class MyBoardUI extends JFrame {
     String ID;
     private JPanel contentPane;
     private JTextArea writeArea;
-    private JTextArea readArea;
+
     private JList list;
     private int articleNum;
     DefaultListModel listModel;
@@ -136,9 +136,6 @@ public class MyBoardUI extends JFrame {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         contentPane.add(writeArea);
 
-        readArea = new JTextArea("read");
-        readArea.setBounds(0, 400, 350, 400);
-
         // 글 읽어오는 부분
         list = new JList();
         list.setBounds(40, 300, 320, 300);
@@ -179,7 +176,7 @@ public class MyBoardUI extends JFrame {
                 String article = writeArea.getText();
                 int num = controller.getArticleNextNum();
                 controller.insertPost(new Post(num, ID, article));
-                readArea.setText("");
+
                 list.clearSelection();
 
                 ArrayList<Post> arr = controller.readPost(ID);
@@ -268,10 +265,10 @@ public class MyBoardUI extends JFrame {
         BacktoMain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // main으로 이동
-                dispose();
                 MainBoardUI main = new MainBoardUI(ID);
                 main.setTitle("Twitter");
                 main.setVisible(true);
+                dispose();
             }
         });
 
@@ -325,6 +322,7 @@ public class MyBoardUI extends JFrame {
 
                     // OtherBoardUI로 이동할 때 팔로워 목록 창이 자동으로 닫히도록 함
                     followListFrame.dispose();
+                    dispose();
                 }
             });
 
