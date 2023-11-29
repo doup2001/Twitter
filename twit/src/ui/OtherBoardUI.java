@@ -34,6 +34,7 @@ public class OtherBoardUI extends JFrame {
     private JLabel nameLabel;
     private JLabel emailLabel;
     private JLabel genderLabel;
+    private JLabel birthdateLabel;
 
     private Controller controller;
 
@@ -76,8 +77,14 @@ public class OtherBoardUI extends JFrame {
         genderLabel.setBounds(40, 210, 320, 20);
         contentPane.add(genderLabel);
 
+        birthdateLabel = new JLabel("생년월일: ");
+        birthdateLabel.setFont(new Font("Nanum Gothic", Font.PLAIN, 12));
+        birthdateLabel.setForeground(new Color(254, 255, 255));
+        birthdateLabel.setBounds(40, 230, 320, 20);
+        contentPane.add(birthdateLabel);
+
         list = new JList();
-        list.setBounds(40, 250, 320, 350);
+        list.setBounds(40, 270, 320, 330);
         list.setForeground(new Color(254, 255, 255));
         list.setBackground(new Color(20, 20, 20));
         contentPane.add(list);
@@ -215,6 +222,7 @@ public class OtherBoardUI extends JFrame {
             nameLabel.setText("이름: " + userInfo.getFirstname() + " " + userInfo.getLastname());
             emailLabel.setText("이메일: " + userInfo.getEmail());
             genderLabel.setText("성별: " + userInfo.getGender());
+            birthdateLabel.setText("생년월일: " + userInfo.getBirthdate());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -223,7 +231,7 @@ public class OtherBoardUI extends JFrame {
     private UserInfo getUserInfo(String userID) throws SQLException {
         UserInfo userInfo = null;
 
-        String query = "SELECT firstname, lastname, email, gender FROM account WHERE id = ?";
+        String query = "SELECT firstname, lastname, email, gender, birthdate FROM account WHERE id = ?";
 
         try (Connection con = DriverManager.getConnection(DatabaseConstants.DB_URL, DatabaseConstants.DB_USER, DatabaseConstants.DB_PASSWORD);
              PreparedStatement st = con.prepareStatement(query)) {
